@@ -1,0 +1,25 @@
+{
+  "name": "chartgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all --parallel start:**",
+    "start:client": "cd ../client && npm start",
+    "start:server": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/junehay/chartgame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/junehay/chartgame/issues"
+  },
+  "homepage": "https://github.com/junehay/chartgame#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "npm-run-all": "^4.1.5"
+  }
+}
