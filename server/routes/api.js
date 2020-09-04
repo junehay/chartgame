@@ -26,7 +26,7 @@ router.get('/gameset', async (req, res) => {
 
         let gameData = companyData.map((e, index) => {
             let data = {};
-            data.price = ['', e.start_price, e.low_price, e.high_price, e.end_price, `시가 : ${e.start_price}\n고가 : ${e.high_price}\n저가 : ${e.low_price}\n 종가 : ${e.end_price}`];
+            data.price = ['', e.low_price, e.start_price, e.end_price, e.high_price, `시가 : ${e.start_price}\n고가 : ${e.high_price}\n저가 : ${e.low_price}\n 종가 : ${e.end_price}`];
             data.volume = ['', e.volume];
             return data;
         });
