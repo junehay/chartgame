@@ -8,6 +8,22 @@ const util = require("util");
 
 sequelize.sync();
 
+router.get('/shift', async (req, res) => {
+    try{
+        const uuid = req.session.uuid;
+        const gameData = await getRedisData(uuid, 'gameData');
+        const jsonData = JSON.parse(gameData);
+        if(jsonData.length > 50){
+            let shiftData = jsonData.shift();
+            client.hset(uuid, 'gameData', JSON.stringify(jsonData));
+            client.expire('gameData', 1000);
+
+            res.json(shiftData);
+        }
+    }catch(err){
+        console.log(err);
+    }
+});
 
 router.get('/gameset', async (req, res) => {
     try {
@@ -31,7 +47,7 @@ router.get('/gameset', async (req, res) => {
             return data;
         });
         client.hset(uuid, 'gameData', JSON.stringify(gameData));
-        client.expire('gameData', 1000);
+        client.expire('gameData', 3600);
 
         res.send('set');
     } catch (err) {
@@ -43,7 +59,7 @@ router.get('/gameget', async (req, res) => {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
     const jsonData = JSON.parse(gameData);
-
+    console.log(jsonData.length)
     res.json(jsonData);
 });
 

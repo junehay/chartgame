@@ -29,7 +29,7 @@ const Header = () => {
                 <Typography variant="h6" className={classes.title}>
                     <Link to="/">K-Chart Game</Link>
                 </Typography>
-                <Button color="inherit">
+                <Button color="inherit" style={{marginRight: '15%'}}>
                     <Link to="/">Home</Link>
                 </Button>
             </Toolbar>

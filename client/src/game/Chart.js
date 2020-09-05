@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import GoogleChart from "react-google-charts";
-import styled from "styled-components";
+import OrderBox from "./OrderBox";
 
 const priceDataSetting = [
     [{
@@ -81,25 +81,58 @@ const volumeDataOptions = {
 };
 
 class Chart extends Component {
-    state = {
-        priceData : ''
+    constructor(props){
+        super(props);
+        this.state = {
+            priceData: '',
+            volumeData: ''
+        }
+    }
+
+    stateRefresh = () => {
+        this.callApi()
+            .then(res => {
+                const priceData = res.reduce((pre, val, index) => {
+                    if(index < 50){
+                        pre.push(val.price);
+                    }
+                    return pre
+                }, []);
+                const concatPriceData = priceDataSetting.concat(priceData);
+                this.setState({priceData: concatPriceData});
+
+                const volumeData = res.reduce((pre, val, index) => {
+                    if(index < 50){
+                        pre.push(val.volume);
+                    }
+                    return pre
+                }, []);
+                const concatVolumeData = volumeDataSetting.concat(volumeData);
+                this.setState({volumeData: concatVolumeData});
+            })
+            .catch(err => console.log(err));
     }
 
     componentDidMount(){
         this.callApi()
             .then(res => {
-                const priceData = res.map((e, index) => {
-                    return e.price;
-                });
+                const priceData = res.reduce((pre, val, index) => {
+                    if(index < 50){
+                        pre.push(val.price);
+                    }
+                    return pre
+                }, []);
                 const concatPriceData = priceDataSetting.concat(priceData);
                 this.setState({priceData: concatPriceData});
 
-                const volumeData = res.map((e, index) => {
-                    return e.volume;
-                });
+                const volumeData = res.reduce((pre, val, index) => {
+                    if(index < 50){
+                        pre.push(val.volume);
+                    }
+                    return pre
+                }, []);
                 const concatVolumeData = volumeDataSetting.concat(volumeData);
                 this.setState({volumeData: concatVolumeData});
-                
             })
             .catch(err => console.log(err));
     }
@@ -121,29 +154,30 @@ class Chart extends Component {
 
     render(){
         return (
-            <Div ref={c => this.div = c}>
-                <GoogleChart
-                    chartType="CandlestickChart"
-                    width="100%"
-                    height="350px"
-                    data={this.state.priceData}
-                    options={priceDataOptions}
-                />
-                <GoogleChart
-                    chartType="ColumnChart"
-                    width="100%"
-                    height="150px"
-                    margin="-100px"
-                    data={this.state.volumeData}
-                    options={volumeDataOptions}
-                />
-            </Div>
+            <div ref={c => this.div = c}>
+                <div>
+                    <GoogleChart
+                        chartType="CandlestickChart"
+                        width="100%"
+                        height="350px"
+                        data={this.state.priceData}
+                        options={priceDataOptions}
+                    />
+                    <GoogleChart
+                        chartType="ColumnChart"
+                        width="100%"
+                        height="150px"
+                        margin="-100px"
+                        data={this.state.volumeData}
+                        options={volumeDataOptions}
+                    />
+                </div>
+                <div>
+                    <OrderBox stateRefresh={this.stateRefresh}/>
+                </div>
+            </div>
         );
     }
 };
-
-const Div = styled.div`
-    margin: 10px 15%;
-`;
 
 export default Chart ;
