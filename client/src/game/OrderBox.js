@@ -35,7 +35,7 @@ class OrderBox extends Component {
         return (
             <Div>
                 <BoxHead>
-                    <span>주문</span><span style={{fontSize: 'small'}}> (남은횟수 : {this.state.time})</span>
+                    <span>주문</span><span style={{fontSize: 'smaller'}}> (남은횟수 : {this.state.time})</span>
                 </BoxHead>
                 <BoxBody>
                     <Button size="small" variant="contained" onClick={this.passClick}>
@@ -55,7 +55,7 @@ class OrderBox extends Component {
 
 const Div = styled.div`
     margin-top: 30px;
-    width: 50%;
+    width: 70%;
 `;
 
 const BoxHead = styled.div`

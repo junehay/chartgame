@@ -48,7 +48,6 @@ const priceDataOptions = {
         position: 'none'
     },
     chartArea: {
-        'width': '50%',
         'height': '82%',
         'left': 0
     },
@@ -70,7 +69,6 @@ const volumeDataOptions = {
         position: 'none'
     },
     chartArea: {
-        'width': '50%',
         'height': '82%',
         'left': 0
     },
@@ -165,7 +163,7 @@ class Chart extends Component {
                     />
                     <GoogleChart
                         chartType="ColumnChart"
-                        width="100%"
+                        width="95%"
                         height="150px"
                         margin="-100px"
                         data={this.state.volumeData}

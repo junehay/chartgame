@@ -42,14 +42,14 @@ router.get('/gameset', async (req, res) => {
 
         let gameData = companyData.map((e, index) => {
             let data = {};
-            data.price = ['', e.low_price, e.start_price, e.end_price, e.high_price, `시가 : ${e.start_price}\n고가 : ${e.high_price}\n저가 : ${e.low_price}\n 종가 : ${e.end_price}`];
+            data.price = ['', e.low_price, e.start_price, e.end_price, e.high_price, `시가 : ${e.start_price.toLocaleString()}\n고가 : ${e.high_price.toLocaleString()}\n저가 : ${e.low_price.toLocaleString()}\n 종가 : ${e.end_price.toLocaleString()}`];
             data.volume = ['', e.volume];
             return data;
         });
         client.hset(uuid, 'gameData', JSON.stringify(gameData));
         client.expire('gameData', 3600);
 
-        res.send('set');
+        res.json(gameData);
     } catch (err) {
         console.log(err);
     }
@@ -58,9 +58,13 @@ router.get('/gameset', async (req, res) => {
 router.get('/gameget', async (req, res) => {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
-    const jsonData = JSON.parse(gameData);
-    console.log(jsonData.length)
-    res.json(jsonData);
+    if(!gameData){
+        res.redirect('/api/gameset')
+    }else{
+        const jsonData = JSON.parse(gameData);
+        console.log(jsonData.length)
+        res.json(jsonData);
+    }
 });
 
 
