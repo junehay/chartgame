@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import GoogleChart from "react-google-charts";
+import styled from "styled-components";
 
 const priceDataSetting = [
     [{
@@ -24,8 +25,7 @@ const priceDataSetting = [
     }]
 ];
 
-const options = {
-    width: 900,
+const priceDataOptions = {
     colors: ['black'],
     backgroundColor: '',
     bar: {
@@ -48,8 +48,9 @@ const options = {
         position: 'none'
     },
     chartArea: {
-        'width': '70%',
-        'height': '82%'
+        'width': '50%',
+        'height': '82%',
+        'left': 0
     },
     series: [{
         targetAxisIndex: 1,
@@ -64,14 +65,14 @@ const volumeDataSetting = [
 ];
 
 const volumeDataOptions = {
-    width: 900,
     colors: ['#93bf85'],
     legend: {
         position: 'none'
     },
     chartArea: {
-        'width': '70%',
-        'height': '82%'
+        'width': '50%',
+        'height': '82%',
+        'left': 0
     },
     series: [{
         targetAxisIndex: 1
@@ -120,13 +121,13 @@ class Chart extends Component {
 
     render(){
         return (
-            <div className="App" ref={c => this.div = c}>
+            <Div ref={c => this.div = c}>
                 <GoogleChart
                     chartType="CandlestickChart"
                     width="100%"
                     height="350px"
                     data={this.state.priceData}
-                    options={options}
+                    options={priceDataOptions}
                 />
                 <GoogleChart
                     chartType="ColumnChart"
@@ -136,9 +137,13 @@ class Chart extends Component {
                     data={this.state.volumeData}
                     options={volumeDataOptions}
                 />
-            </div>
+            </Div>
         );
     }
 };
+
+const Div = styled.div`
+    margin: 10px 15%;
+`;
 
 export default Chart ;

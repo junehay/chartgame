@@ -1,0 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+/* material-ui */
+.MuiTypography-root {
+    margin-left: 15% !important;
+}
+
+.MuiButtonBase-root {
+    margin-right: 15% !important;
+}
