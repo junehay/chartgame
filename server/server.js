@@ -14,7 +14,10 @@ app.use(session({
         maxAge: 1000 * 60 * 60
     },
 }));
+app.use(express.json()); 
+app.use(express.urlencoded( {extended : false } ));
 
+// session setting
 app.use((req, res, next) => {
     if(!req.session.uuid){
         req.session.uuid = uuidv4();

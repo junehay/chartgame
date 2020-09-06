@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import * as Api from "./CallApi";
 
 
-const OrderBox = ({stateRefresh}) => {
+const OrderBox = ({drawChart, buy, sell, nextButton}) => {
     const [time, setTime] = useState(30);
 
     useEffect(() => {
@@ -20,11 +20,30 @@ const OrderBox = ({stateRefresh}) => {
                 if(!res){
 
                 }else{
-                    stateRefresh();
-                    setTime(time-1);
+                    drawChart();
+                    setTime(time => time-1);
                 }
             })
     };
+
+    const buyClick = () => {
+        if(time > 0){
+            buy();
+            passClick();
+        }
+    }
+
+    const sellClick = () => {
+        sell();
+        passClick();
+    }
+
+    let toggleButton;
+    if(nextButton === 'buy'){
+        toggleButton = <Button size="small" variant="contained" color="primary" onClick={buyClick}>Buy</Button>
+    }else{
+        toggleButton = <Button size="small" variant="outlined" color="primary" onClick={sellClick}>Sell</Button>
+    }
 
     return (
         <Div>
@@ -32,12 +51,10 @@ const OrderBox = ({stateRefresh}) => {
                 <span>주문</span><span style={{fontSize: 'smaller'}}> (남은횟수 : {time})</span>
             </BoxHead>
             <BoxBody>
-                <Button size="small" variant="contained" onClick={passClick}>
+                <Button size="small" variant="contained" style={{marginRight: '30px'}}onClick={passClick}>
                     Pass
                 </Button>
-                <Button size="small" variant="contained" color="primary">
-                    Buy
-                </Button>
+                {toggleButton}
                 <Button size="small" variant="outlined" style={{float: 'right'}}>
                     End Game
                 </Button>

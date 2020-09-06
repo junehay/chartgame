@@ -11,5 +11,5 @@ export const shiftData = async () => {
 export const getDataLength = async () => {
     const res = await fetch('/api/gameget');
     const json = await res.json();
-    return json.length;
+    return json['chart'].length;
 }

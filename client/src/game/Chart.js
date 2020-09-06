@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import GoogleChart from "react-google-charts";
 import OrderBox from "./OrderBox";
-import Account from './Account';
+import Position from './Position';
+import axios from 'axios';
 
 const priceDataSetting = [
     [{
@@ -79,42 +80,50 @@ const volumeDataOptions = {
     vAxis: {format: 'short'}
 };
 
+const getGameData = async () => {
+    const res = await axios.get('/api/gameget');
+    const data = res.data;
+    return data;
+};
+
 const Chart = () => {
     const [priceData, setPriceData] = useState();
     const [volumeData, setVolumeData] = useState();
     const [nowPrice, setNowPrice] = useState(0);
-
-    const stateRefresh = () => {
-        callApi()
-            .then(res => {
-                const priceData = res.reduce((pre, val, index) => {
-                    if(index < 50){
-                        pre.push(val.price);
-                    }
-                    if(index === 49){
-                        setNowPrice(val.price[3]);
-                    }
-                    return pre
-                }, []);
-                const concatPriceData = priceDataSetting.concat(priceData);
-                setPriceData(concatPriceData);
-
-                const volumeData = res.reduce((pre, val, index) => {
-                    if(index < 50){
-                        pre.push(val.volume);
-                    }
-                    return pre
-                }, []);
-                const concatVolumeData = volumeDataSetting.concat(volumeData);
-                setVolumeData(concatVolumeData);
-            })
-            .catch(err => console.log(err));
-    }
+    const [buyPrice, setBuyPrice] = useState(0);
+    const [stocks, setStocks] = useState(0);
+    const [gainPrice, setGainPrice] = useState(0);
+    const [gainPercent, setGainPercent] = useState(0);
+    const [nextButton, setNextButton] = useState();
+    const [account, setAccount] = useState(0);
 
     useEffect(() => {
-        callApi()
+        getGameData()
             .then(res => {
-                const priceData = res.reduce((pre, val, index) => {
+                const positionData = res.position;
+                const userData = res.user;
+                setNextButton(positionData.next_btn);
+                setBuyPrice(positionData.buy_price);
+                setStocks(positionData.stocks);
+                setAccount(userData.account);
+            })
+    }, []);
+
+    useEffect(() => {
+        drawChart();
+    }, []);
+
+    useEffect(() => {
+        buyPrice === 0 ? setGainPrice(0) : setGainPrice(((nowPrice-buyPrice)*stocks).toLocaleString());
+        buyPrice === 0 ? setGainPercent(0) : setGainPercent((((nowPrice/buyPrice)-1)*100).toFixed(2));
+    }, [buyPrice, nowPrice]);
+
+
+    const drawChart = () => {
+        getGameData()
+            .then(res => {
+                const chartData = res.chart;
+                const priceData = chartData.reduce((pre, val, index) => {
                     if(index < 50){
                         pre.push(val.price);
                     }
@@ -126,7 +135,7 @@ const Chart = () => {
                 const concatPriceData = priceDataSetting.concat(priceData);
                 setPriceData(concatPriceData);
 
-                const volumeData = res.reduce((pre, val, index) => {
+                const volumeData = chartData.reduce((pre, val, index) => {
                     if(index < 50){
                         pre.push(val.volume);
                     }
@@ -136,17 +145,24 @@ const Chart = () => {
                 setVolumeData(concatVolumeData);
             })
             .catch(err => console.log(err));
-    }, []);
+    };
 
-    const callApi = async () => {
-        const res = await fetch('/api/gameget');
-        const body = await res.json();
-        return body;
-    }
+    const buy = async () => {
+        setBuyPrice(nowPrice);
+        let res = await axios.post('/api/buy', {nowPrice: nowPrice});
+        setNextButton('sell');
+        setStocks(Math.floor(account/nowPrice));
+        setAccount(res.data.account);
+    };
+
+    const sell = () => {
+        setBuyPrice(0);
+        setNextButton('buy');
+    };
 
     return (
         <div>
-            <div style={{width: '50%', position: 'absolute', fontSize: 'small', margin: '10px 15%'}}>
+            <div style={{width: '49%', position: 'absolute', fontSize: 'small', margin: '10px 15%'}}>
                 <div>
                     <GoogleChart
                         chartType="CandlestickChart"
@@ -165,11 +181,11 @@ const Chart = () => {
                     />
                 </div>
                 <div>
-                    <OrderBox stateRefresh={stateRefresh}/>
+                    <OrderBox drawChart={drawChart} buy={buy} sell={sell} nextButton={nextButton}/>
                 </div>
             </div>
-            <div style={{width: '26%', float: 'right', marginRight: '15%', position: 'relative', fontSize: 'small'}}>
-                <Account nowPrice={nowPrice}/>
+            <div style={{width: '28%', float: 'right', marginRight: '15%', position: 'relative', fontSize: 'small'}}>
+                <Position nowPrice={nowPrice} buyPrice={buyPrice} stocks={stocks} gainPrice={gainPrice} gainPercent={gainPercent} account={account}/>
             </div>
         </div>
     );
