@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import GoogleChart from "react-google-charts";
 import OrderBox from "./OrderBox";
+import Account from './Account';
 
 const priceDataSetting = [
     [{
@@ -78,26 +79,25 @@ const volumeDataOptions = {
     vAxis: {format: 'short'}
 };
 
-class Chart extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            priceData: '',
-            volumeData: ''
-        }
-    }
+const Chart = () => {
+    const [priceData, setPriceData] = useState();
+    const [volumeData, setVolumeData] = useState();
+    const [nowPrice, setNowPrice] = useState(0);
 
-    stateRefresh = () => {
-        this.callApi()
+    const stateRefresh = () => {
+        callApi()
             .then(res => {
                 const priceData = res.reduce((pre, val, index) => {
                     if(index < 50){
                         pre.push(val.price);
                     }
+                    if(index === 49){
+                        setNowPrice(val.price[3]);
+                    }
                     return pre
                 }, []);
                 const concatPriceData = priceDataSetting.concat(priceData);
-                this.setState({priceData: concatPriceData});
+                setPriceData(concatPriceData);
 
                 const volumeData = res.reduce((pre, val, index) => {
                     if(index < 50){
@@ -106,22 +106,25 @@ class Chart extends Component {
                     return pre
                 }, []);
                 const concatVolumeData = volumeDataSetting.concat(volumeData);
-                this.setState({volumeData: concatVolumeData});
+                setVolumeData(concatVolumeData);
             })
             .catch(err => console.log(err));
     }
 
-    componentDidMount(){
-        this.callApi()
+    useEffect(() => {
+        callApi()
             .then(res => {
                 const priceData = res.reduce((pre, val, index) => {
                     if(index < 50){
                         pre.push(val.price);
                     }
+                    if(index === 49){
+                        setNowPrice(val.price[3]);
+                    }
                     return pre
                 }, []);
                 const concatPriceData = priceDataSetting.concat(priceData);
-                this.setState({priceData: concatPriceData});
+                setPriceData(concatPriceData);
 
                 const volumeData = res.reduce((pre, val, index) => {
                     if(index < 50){
@@ -130,35 +133,26 @@ class Chart extends Component {
                     return pre
                 }, []);
                 const concatVolumeData = volumeDataSetting.concat(volumeData);
-                this.setState({volumeData: concatVolumeData});
+                setVolumeData(concatVolumeData);
             })
             .catch(err => console.log(err));
-    }
+    }, []);
 
-    callApi = async () => {
+    const callApi = async () => {
         const res = await fetch('/api/gameget');
         const body = await res.json();
         return body;
     }
 
-    // componentDidUpdate(){
-    //     setTimeout(() => {
-    //         let sticks = document.querySelectorAll('rect[fill="#000000"]');
-    //         sticks.forEach(e => {
-    //             e.setAttribute('width', 1);
-    //         })
-    //     }, 1000); 
-    // }
-
-    render(){
-        return (
-            <div ref={c => this.div = c}>
+    return (
+        <div>
+            <div style={{width: '50%', position: 'absolute', fontSize: 'small', margin: '10px 15%'}}>
                 <div>
                     <GoogleChart
                         chartType="CandlestickChart"
                         width="100%"
                         height="350px"
-                        data={this.state.priceData}
+                        data={priceData}
                         options={priceDataOptions}
                     />
                     <GoogleChart
@@ -166,16 +160,19 @@ class Chart extends Component {
                         width="95%"
                         height="150px"
                         margin="-100px"
-                        data={this.state.volumeData}
+                        data={volumeData}
                         options={volumeDataOptions}
                     />
                 </div>
                 <div>
-                    <OrderBox stateRefresh={this.stateRefresh}/>
+                    <OrderBox stateRefresh={stateRefresh}/>
                 </div>
             </div>
-        );
-    }
+            <div style={{width: '26%', float: 'right', marginRight: '15%', position: 'relative', fontSize: 'small'}}>
+                <Account nowPrice={nowPrice}/>
+            </div>
+        </div>
+    );
 };
 
 export default Chart ;

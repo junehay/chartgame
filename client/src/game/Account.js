@@ -1,16 +1,13 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from "styled-components";
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import * as Api from "./CallApi";
 
 
-const Account = () => {
+const Account = ({nowPrice}) => {
     return (
         <Div>
             <BoxHead>
@@ -28,7 +25,7 @@ const Account = () => {
                     </TableHead>
                     <TableBody>
                         <TableRow>
-                            <TableCell align="center">50,000</TableCell>
+                            <TableCell align="center">{nowPrice.toLocaleString()}</TableCell>
                             <TableCell align="center">30,000</TableCell>
                             <TableCell align="center">+10,000</TableCell>
                             <TableCell align="center">+15.5%</TableCell>

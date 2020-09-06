@@ -9,12 +9,7 @@ class Game extends Component {
       return (
         <div>
             <Header />
-            <Div style={{width: '50%', position: 'absolute', fontSize: 'small'}}>
-                <Chart />
-            </Div>
-            <div style={{width: '26%', float: 'right', marginRight: '15%', position: 'relative', fontSize: 'small'}}>
-                <Account />
-            </div>
+            <Chart />
         </div>
       );
     }
