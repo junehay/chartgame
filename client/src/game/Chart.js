@@ -95,8 +95,10 @@ const Chart = () => {
     const [gainPrice, setGainPrice] = useState(0);
     const [gainPercent, setGainPercent] = useState(0);
     const [nextButton, setNextButton] = useState();
+    const [winCount, setWinCount] = useState(0);
+    const [loseCount, setLoseCount] = useState(0);
+    const [accGainPrice, setAccGainPrice] = useState(0);
     const [account, setAccount] = useState(0);
-
     useEffect(() => {
         getGameData()
             .then(res => {
@@ -106,15 +108,15 @@ const Chart = () => {
                 setBuyPrice(positionData.buy_price);
                 setStocks(positionData.stocks);
                 setAccount(userData.account);
+                setAccGainPrice(userData.acc_gain_price);
+                setWinCount(userData.win);
+                setLoseCount(userData.lose);
             })
-    }, []);
-
-    useEffect(() => {
         drawChart();
     }, []);
 
     useEffect(() => {
-        buyPrice === 0 ? setGainPrice(0) : setGainPrice(((nowPrice-buyPrice)*stocks).toLocaleString());
+        buyPrice === 0 ? setGainPrice(0) : setGainPrice(((nowPrice-buyPrice)*stocks));
         buyPrice === 0 ? setGainPercent(0) : setGainPercent((((nowPrice/buyPrice)-1)*100).toFixed(2));
     }, [buyPrice, nowPrice]);
 
@@ -146,18 +148,27 @@ const Chart = () => {
             })
             .catch(err => console.log(err));
     };
-
     const buy = async () => {
-        setBuyPrice(nowPrice);
-        let res = await axios.post('/api/buy', {nowPrice: nowPrice});
+        const res = await axios.post('/api/buy');
+        setBuyPrice(res.data.nowPrice);
         setNextButton('sell');
-        setStocks(Math.floor(account/nowPrice));
+        setStocks(res.data.stocks);
         setAccount(res.data.account);
+        return res;
     };
 
-    const sell = () => {
+    const sell = async () => {
+        const res = await axios.post('/api/sell');
+        if (res.data.result === 'win') {
+            setWinCount(val => winCount+1)
+        } else {
+            setLoseCount(val => loseCount+1)
+        }
         setBuyPrice(0);
         setNextButton('buy');
+        setStocks(0);
+        setAccGainPrice(val => val += res.data.gainPrice);
+        setAccount(res.data.account);
     };
 
     return (
@@ -185,7 +196,7 @@ const Chart = () => {
                 </div>
             </div>
             <div style={{width: '28%', float: 'right', marginRight: '15%', position: 'relative', fontSize: 'small'}}>
-                <Position nowPrice={nowPrice} buyPrice={buyPrice} stocks={stocks} gainPrice={gainPrice} gainPercent={gainPercent} account={account}/>
+                <Position nowPrice={nowPrice} buyPrice={buyPrice} stocks={stocks} gainPrice={gainPrice} gainPercent={gainPercent} winCount={winCount} loseCount={loseCount} accGainPrice={accGainPrice} account={account} />
             </div>
         </div>
     );

@@ -5,17 +5,29 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 
-const Position = ({nowPrice, buyPrice, stocks, gainPrice, gainPercent, account}) => {
+const Position = ({nowPrice, buyPrice, stocks, gainPrice, gainPercent, winCount, loseCount, accGainPrice, account}) => {
     let style;
-    if (parseInt(gainPrice) > 0) {
+    if (gainPrice > 0) {
         style = {
             color: 'red'
         }
-    } else if (parseInt(gainPrice) < 0) {
+    } else if (gainPrice < 0) {
         style = {
             color: 'blue'
         }
     }
+
+    let accStyle;
+    if (accGainPrice > 0) {
+        accStyle = {
+            color: 'red'
+        }
+    } else if (accGainPrice < 0) {
+        accStyle = {
+            color: 'blue'
+        }
+    }
+
     return (
         <Div>
             <BoxHead>
@@ -35,7 +47,7 @@ const Position = ({nowPrice, buyPrice, stocks, gainPrice, gainPercent, account})
                             <TableCell align="center">{nowPrice.toLocaleString()}</TableCell>
                             <TableCell align="center">{buyPrice.toLocaleString()}</TableCell>
                             <TableCell align="center">{stocks.toLocaleString()}</TableCell>
-                            <TableCell align="center" style={style}>{gainPrice}</TableCell>
+                            <TableCell align="center" style={style}>{gainPrice.toLocaleString()}</TableCell>
                             <TableCell align="center" style={style}>{gainPercent}%</TableCell>
                         </TableRow>
                         <TableRow>
@@ -60,9 +72,9 @@ const Position = ({nowPrice, buyPrice, stocks, gainPrice, gainPercent, account})
                             <TableCell align="center" style={{padding: 10}}>추정자산</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell align="center">%</TableCell>
-                            <TableCell align="center">+-</TableCell>
-                            <TableCell align="center">%</TableCell>
+                            <TableCell align="center">{isNaN((winCount/(winCount+loseCount)))?0:(winCount/(winCount+loseCount)*100).toFixed(2)}%</TableCell>
+                            <TableCell align="center" style={accStyle}>{accGainPrice.toLocaleString()}</TableCell>
+                            <TableCell align="center" style={accStyle}>{((((100000000+accGainPrice)/100000000)-1)*100).toFixed(2)}%</TableCell>
                             <TableCell align="center">{(account+nowPrice*stocks).toLocaleString()}원</TableCell>
                         </TableRow>
                         <TableRow>

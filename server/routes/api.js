@@ -19,6 +19,8 @@ router.get('/shift', async (req, res) => {
             client.expire('gameData', 3600);
 
             res.json(shiftData);
+        }else{
+            res.send('end');
         }
     }catch(err){
         console.log(err);
@@ -82,14 +84,13 @@ router.get('/gameget', async (req, res) => {
 });
 
 router.post('/buy', async (req, res) => {
-    const nowPrice = req.body.nowPrice;
     try {
         const uuid = req.session.uuid;
         const gameData = await getRedisData(uuid, 'gameData');
         const jsonData = JSON.parse(gameData);
+        const nowPrice = jsonData['chart'][49].price[3]; // [{"price":[option, low, start, end, high, tooltip],"volume":[option, value]}, ...]
         const account = jsonData['user'].account;
         const stocks = Math.floor(account/nowPrice);
-        console.log('account : ', account)
         jsonData['position'].next_btn = 'sell';
         jsonData['position'].buy_price = nowPrice;
         jsonData['position'].stocks = stocks;
@@ -98,12 +99,46 @@ router.post('/buy', async (req, res) => {
         client.hset(uuid, 'gameData', JSON.stringify(jsonData));
         client.expire('gameData', 3600);
 
-        res.json({account: account - nowPrice * stocks});
+        res.json({nowPrice: nowPrice, stocks: stocks, account: account - nowPrice * stocks});
     } catch (err) {
         console.log(err);
     }
 });
 
+router.post('/sell', async (req, res) => {
+    try {
+        const uuid = req.session.uuid;
+        const gameData = await getRedisData(uuid, 'gameData');
+        const jsonData = JSON.parse(gameData);
+        const nowPrice = jsonData['chart'][49].price[3];
+        const buyPrice = jsonData['position'].buy_price;
+        const stocks = jsonData['position'].stocks;
+        const nowAccount = jsonData['user'].account;
+        jsonData['position'].next_btn = 'buy';
+        jsonData['position'].buy_price = 0;
+        jsonData['position'].stocks = 0;
+
+        let result;
+        if (nowPrice - buyPrice > 0) {
+            result = 'win';
+            jsonData['user'].win += 1;
+        } else {
+            result = 'lose';
+            jsonData['user'].lose += 1;
+        }
+        const gainPrice = (nowPrice - buyPrice) * stocks;
+        const afterAccount = nowAccount + nowPrice * stocks
+        jsonData['user'].acc_gain_price += gainPrice;
+        jsonData['user'].account = afterAccount;
+
+        client.hset(uuid, 'gameData', JSON.stringify(jsonData));
+        client.expire('gameData', 3600);
+
+        res.json({result: result, gainPrice: gainPrice, account: afterAccount});
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 async function getRedisData(key, field){
     const hgetPromise = util.promisify(client.hget).bind(client);

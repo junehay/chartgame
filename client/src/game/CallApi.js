@@ -1,15 +1,16 @@
+import axios from 'axios';
+
 export const shiftData = async () => {
-    const res = await fetch('/api/shift');
-    if(res){
-        const json = await res.json();
-        return json;
-    }else{
+    const res = await axios.get('/api/shift');
+    if(res === 'end'){
         return false;
+    }else{
+        return res.data
     }
 }
 
 export const getDataLength = async () => {
-    const res = await fetch('/api/gameget');
-    const json = await res.json();
-    return json['chart'].length;
+    const res = await axios.get('/api/gameget');
+    const data = res.data;
+    return data['chart'].length;
 }
