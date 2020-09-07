@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styled from "styled-components";
-import Button from "@material-ui/core/Button";
+import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress'
-import * as Api from "./CallApi";
+import * as Api from './CallApi';
+import GameResult from './GameResult';
 
 
 const OrderBox = ({drawChart, buy, sell, nextButton}) => {
@@ -63,13 +64,12 @@ const OrderBox = ({drawChart, buy, sell, nextButton}) => {
                 <span>주문</span><span style={{fontSize: 'smaller'}}> (남은횟수 : {time})</span>
             </BoxHead>
             <BoxBody>
-                <Button size="small" variant="contained" style={{marginRight: '30px'}}onClick={passClick}>
+                <Button size="small" variant="contained" style={{marginRight: '30px'}} onClick={passClick}>
                     Pass
                 </Button>
                 {orderButton}
-                <Button size="small" variant="outlined" style={{float: 'right'}}>
-                    End Game
-                </Button>
+                
+                <GameResult />
             </BoxBody>
         </Div>
     );

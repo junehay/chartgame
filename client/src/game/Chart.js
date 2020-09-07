@@ -118,7 +118,7 @@ const Chart = () => {
     useEffect(() => {
         buyPrice === 0 ? setGainPrice(0) : setGainPrice(((nowPrice-buyPrice)*stocks));
         buyPrice === 0 ? setGainPercent(0) : setGainPercent((((nowPrice/buyPrice)-1)*100).toFixed(2));
-    }, [buyPrice, nowPrice]);
+    }, [buyPrice, nowPrice, stocks]);
 
 
     const drawChart = () => {
@@ -174,6 +174,7 @@ const Chart = () => {
     return (
         <div>
             <div style={{width: '49%', position: 'absolute', fontSize: 'small', margin: '10px 15%'}}>
+                { !priceData ? '' :
                 <div>
                     <GoogleChart
                         chartType="CandlestickChart"
@@ -190,7 +191,7 @@ const Chart = () => {
                         data={volumeData}
                         options={volumeDataOptions}
                     />
-                </div>
+                </div> }
                 <div>
                     <OrderBox drawChart={drawChart} buy={buy} sell={sell} nextButton={nextButton}/>
                 </div>

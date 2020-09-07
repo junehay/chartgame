@@ -7,8 +7,3 @@ a {
     color: white;
     text-decoration: none;
 }
-
-/* material-ui */
-.MuiTypography-root {
-    margin-left: 15% !important;
-}

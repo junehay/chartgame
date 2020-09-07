@@ -1,17 +1,14 @@
-import React, {Component} from 'react';
-import styled from "styled-components";
+import React from 'react';
 import Header from '../components/Header';
 import Chart from '../game/Chart';
 
-class Game extends Component {
-    render() {
-      return (
+const Game = () => {
+    return (
         <div>
             <Header />
             <Chart />
         </div>
-      );
-    }
+    );
 }
 
 export default Game;

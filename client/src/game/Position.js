@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
