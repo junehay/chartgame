@@ -123,14 +123,14 @@ const Result = () => {
                                 </div>
                             </CardContent>
                         <EndBox>
-                        <Button size="small" variant="outlined" color="primary" onClick={reGame}>
+                        <Button size="small" variant="outlined" color="primary" style={{marginRight: '170px'}} onClick={reGame}>
                             다시하기
                         </Button>
-                        <Button size="small" variant="outlined" color="primary" style={{marginLeft: '170px'}}>
                             <Link to="/">
+                        <Button size="small" variant="outlined" color="primary">
                                 메인으로
-                            </Link>
                         </Button>    
+                            </Link>
                         </EndBox>
                     </Card>
                 </Div>

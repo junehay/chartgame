@@ -66,7 +66,7 @@ const OrderBox = ({drawChart, buy, sell, nextButton}) => {
                 <span>주문</span><span style={{fontSize: 'smaller'}}> (남은횟수 : {time})</span>
             </BoxHead>
             <BoxBody>
-                <Button size="small" variant="contained" style={{marginRight: '30px'}} onClick={passClick}>
+                <Button size="small" variant="outlined" style={{marginRight: '30px'}} onClick={passClick}>
                     Pass
                 </Button>
                 {orderButton}
