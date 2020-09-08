@@ -31,7 +31,7 @@ const OrderBox = ({drawChart, buy, sell, nextButton}) => {
         Api.shiftData()
             .then((res) => {
                 if(res === 'end'){
-                    alert('남은횟수가 없습니다.');
+                    alert('게임이 종료되었습니다.\nEND GAME 버튼을 눌러 결과를 확인하세요.');
                 }else{
                     drawChart();
                     setTime(time => time-1);
@@ -48,14 +48,16 @@ const OrderBox = ({drawChart, buy, sell, nextButton}) => {
             await buy();
             passClick();
         }else{
-            alert('남은횟수가 없습니다.');
+            alert('게임이 종료되었습니다.\nEND GAME 버튼을 눌러 결과를 확인하세요.');
         }
     }
 
     const sellClick = async () => {
         setOrderButton(<Button size="small" variant="outlined"><CircularProgress size={25} /></Button>);
         await sell();
-        passClick();
+        if(time > 0){
+            passClick();
+        }
     }
 
     return (

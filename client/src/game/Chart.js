@@ -99,6 +99,7 @@ const Chart = () => {
     const [loseCount, setLoseCount] = useState(0);
     const [accGainPrice, setAccGainPrice] = useState(0);
     const [account, setAccount] = useState(0);
+
     useEffect(() => {
         getGameData()
             .then(res => {

@@ -28,15 +28,13 @@ const Header = () => {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" className={classes.title}>
-                    <Link to="/">K-Chart Game</Link>
+                    <Link to="/" style={{color: 'white'}}>K-Chart Game</Link>
                 </Typography>
                 <Button color="inherit" style={{marginRight: '15%'}}>
-                    <Link to="/">Home</Link>
+                    <Link to="/" style={{color: 'white'}}>Home</Link>
                 </Button>
             </Toolbar>
         </AppBar>
-        
-        <Link to="/game">게임</Link>
       </div>
     );
 }

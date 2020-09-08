@@ -4,7 +4,8 @@ const sequelize = require('../models/index').sequelize;
 const { Company } = require('../models');
 const redis = require('redis');
 const client = redis.createClient();
-const util = require("util");
+const util = require('util');
+const moment = require('moment');
 
 sequelize.sync();
 
@@ -39,16 +40,26 @@ router.get('/gameset', async (req, res) => {
                 ['trading_date', 'ASC']
             ]
         });
-        let rand = Math.floor(Math.random() * 19);
+        let rand = Math.floor(Math.random() * 20);
         companyData = companyData.slice(rand, rand + 80);
 
-        let gameData = {};
+        let companyName;
+        let startDate;
+        let endDate;
         let chartData = companyData.map((e, index) => {
             let data = {};
             data.price = ['', e.low_price, e.start_price, e.end_price, e.high_price, `시가 : ${e.start_price.toLocaleString()}\n고가 : ${e.high_price.toLocaleString()}\n저가 : ${e.low_price.toLocaleString()}\n 종가 : ${e.end_price.toLocaleString()}`];
             data.volume = ['', e.volume];
+            if(index === 0){
+                startDate = e.trading_date;
+                companyName = e.name;
+            }else if(index === 79){
+                endDate = e.trading_date;
+            }
             return data;
         });
+
+        let gameData = {};
         gameData.chart = chartData;
         gameData.position = {
             next_btn: 'buy',
@@ -61,11 +72,15 @@ router.get('/gameset', async (req, res) => {
             acc_gain_price: 0,
             account: 100000000
         };
+        gameData.company = companyName;
+        gameData.start_date = moment(startDate).format('YYYY-MM-DD');
+        gameData.end_date = moment(endDate).format('YYYY-MM-DD');
         
         client.hset(uuid, 'gameData', JSON.stringify(gameData));
         client.expire('gameData', 3600);
 
-        res.json(gameData);
+        // res.json(gameData);
+        res.redirect('/api/gameget');
     } catch (err) {
         console.log(err);
     }
@@ -137,6 +152,31 @@ router.post('/sell', async (req, res) => {
         res.json({result: result, gainPrice: gainPrice, account: afterAccount});
     } catch (err) {
         console.log(err);
+    }
+});
+
+router.post('/endgame', async (req, res) => {
+    try{
+        const uuid = req.session.uuid;
+        const gameData = await getRedisData(uuid, 'gameData');
+        const jsonData = JSON.parse(gameData);
+        const company = jsonData.company;
+        const date = `${jsonData.start_date} ~ ${jsonData.end_date}`;
+        const userData = jsonData.user;
+        const accGainPrice = userData.acc_gain_price;
+        const account = userData.account;
+        const win = userData.win;
+        const lose = userData.lose;
+        const vicPercent = isNaN((win/(win+lose)))?0:(win/(win+lose)*100).toFixed(2);
+        res.json({
+            vicPercent: vicPercent,
+            accGainPrice: accGainPrice,
+            account: account,
+            company: company,
+            date: date
+        });
+    }catch(err){
+        console.log('err : ', err)
     }
 });
 
