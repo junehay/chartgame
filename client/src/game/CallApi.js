@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const shiftData = async () => {
-    const res = await axios.get('/api/shift');
+    const res = await axios.post('/api/shift');
     if(res === 'end'){
         return false;
     }else{
@@ -10,7 +10,7 @@ export const shiftData = async () => {
 }
 
 export const getDataLength = async () => {
-    const res = await axios.get('/api/gameget');
+    const res = await axios.post('/api/gameget');
     const data = res.data;
     return data['chart'].length;
 }

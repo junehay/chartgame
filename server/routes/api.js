@@ -10,7 +10,7 @@ const moment = require('moment');
 
 sequelize.sync();
 
-router.get('/shift', async (req, res) => {
+router.post('/shift', async (req, res) => {
     try{
         const uuid = req.session.uuid;
         const gameData = await getRedisData(uuid, 'gameData');
@@ -29,7 +29,7 @@ router.get('/shift', async (req, res) => {
     }
 });
 
-router.get('/gameset', async (req, res) => {
+router.post('/gameset', async (req, res) => {
     try {
         const uuid = req.session.uuid;
         const companyCode = '005930'; // 랜덤 코드
@@ -79,18 +79,17 @@ router.get('/gameset', async (req, res) => {
         
         client.hset(uuid, 'gameData', JSON.stringify(gameData));
         client.expire('gameData', 3600);
-
-        res.redirect('/api/gameget');
+        res.redirect(307, '/api/gameget');
     } catch (err) {
         console.log(err);
     }
 });
 
-router.get('/gameget', async (req, res) => {
+router.post('/gameget', async (req, res) => {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
     if(!gameData){
-        res.redirect('/api/gameset')
+        res.redirect(307, '/api/gameset')
     }else{
         const jsonData = JSON.parse(gameData);
         console.log(jsonData['chart'].length)
@@ -181,12 +180,12 @@ router.post('/endgame', async (req, res) => {
 });
 
 router.post('/rankset', async (req, res) => {
-    const name = req.body.name;
-    const company = req.body.company;
-    const vicPercent = parseFloat(req.body.vicPercent);
-    const gainPercent = parseFloat(req.body.gainPercent);
-    const account = req.body.account;
     try {
+        const name = req.body.name;
+        const company = req.body.company;
+        const vicPercent = parseFloat(req.body.vicPercent);
+        const gainPercent = parseFloat(req.body.gainPercent);
+        const account = req.body.account;
         await Record.create({
             name: name,
             company: company,

@@ -81,7 +81,7 @@ const volumeDataOptions = {
 };
 
 const getGameData = async () => {
-    const res = await axios.get('/api/gameget');
+    const res = await axios.post('/api/gameget');
     const data = res.data;
     return data;
 };

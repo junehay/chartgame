@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const reGame = async () => {
-    await axios.get('/api/gameset');
+    await axios.post('/api/gameset');
     document.location.replace('/game');
 };
 
@@ -70,7 +70,7 @@ const Result = ({nextButton}) => {
                 gainPercent: accGainPercent,
                 account: account
             });
-            await axios.get('/api/gameset');
+            await axios.post('/api/gameset');
             document.location.replace('/');
         }
     }
