@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -17,52 +18,50 @@ import Button from '@material-ui/core/Button';
 import './RankList.css';
 
 const columns = [
-    { id: 'name', label: '랭킹', minWidth: 30 },
-    { id: 'code', label: '이름', minWidth: 80 },
-    { id: 'code', label: '종목', minWidth: 80 },
-    {
-      id: 'population',
-      label: '승률',
-      minWidth: 70,
-      format: (value) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'size',
-      label: '수익률',
-      minWidth: 70,
-      format: (value) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'density',
-      label: '잔고',
-      minWidth: 100,
-      format: (value) => value.toFixed(2),
-    },
-];
-  
-function createData(name, code, population, size) {
-    const density = population / size;
-    return { name, code, population, size, density };
-}
-  
-const rows = [
-    createData(<LooksOneIcon style={{color: 'gold'}}/>, '카카오 폴리페놀', 13.33, 53.33),
-    createData(<LooksTwoIcon style={{color: 'silver'}}/>, 'CN', 140365, 9561),
-    createData(<Looks3Icon style={{color: 'brown'}}/>, 'IT', 604873, 301340),
-    createData('4', 'US', 327434, 9833520),
-    createData('5', 'CA', 37603, 99870),
-    createData('6', 'AU', 25400, 92024),
-    createData('7', 'DE', 83000, 3578),
-    createData('8', 'IE', 4850, 702),
-    createData('9', 'MX', 126591, 19550),
-    createData('10', 'JP', 126310, 3773),
-    createData('11', 'FR', 67020, 6409),
-    createData('12', 'GB', 67545757, 242495)
+    { id: 'rank', label: '랭킹', minWidth: 30 },
+    { id: 'name', label: '이름', minWidth: 100 },
+    { id: 'company', label: '종목', minWidth: 100 },
+    { id: 'vicPercent', label: '승률', minWidth: 50 },
+    { id: 'gainPercent', label: '수익률', minWidth: 50 },
+    { id: 'account', label: '잔고', minWidth: 80 }
 ];
 
+function createData(rank, name, company, vicPercent, gainPercent, account) {
+    if (rank === 1) {
+        rank = <LooksOneIcon style={{color: 'gold'}}/>;
+    } else if (rank === 2) {
+        rank = <LooksTwoIcon style={{color: 'silver'}}/>;
+    } else if (rank === 3) {
+        rank = <Looks3Icon style={{color: 'brown'}}/>;
+    }
+    vicPercent = `${vicPercent}%`;
+    gainPercent = `${gainPercent}%`;
+    account = `${account.toLocaleString()}원`;
+
+    return { rank, name, company, vicPercent, gainPercent, account };
+}
+
+const getRecordData = async () => {
+    const rankList = await axios.get('/api/ranklist');
+    const data = rankList.data;
+    const formatData = data.map((e, index) => {
+        return createData(index+1, e.name, e.company, e.vicPercent, e.gainPercent, e.account);
+    })
+
+    return formatData;
+}
+
 const RankList = () => {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rows, setRows] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    useEffect(() => {
+        getRecordData()
+            .then(res => {
+                setRows(res);
+            })
+    }, []);
   
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -97,14 +96,14 @@ const RankList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                         return (
-                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                            <TableRow hover key={index}>
                             {columns.map((column) => {
                                 const value = row[column.id];
                                 return (
                                 <TableCell key={column.id} align={column.align}>
-                                    {column.format && typeof value === 'number' ? column.format(value) : value}
+                                    {column.format ? column.format(value) : value}
                                 </TableCell>
                                 );
                             })}
@@ -135,7 +134,7 @@ const RankList = () => {
 
 const List = styled.div`
     margin: 0px auto;
-    width: 600px;
+    width: 620px;
     margin-top: 60px;
 `;
 
@@ -152,7 +151,7 @@ const ListHead = styled.div`
 const StartBox = styled.div`
     margin-top: 20px;
     width: 100%;
-    text-align: center
+    text-align: center;
 `;
 
 export default RankList;

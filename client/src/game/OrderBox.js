@@ -71,7 +71,7 @@ const OrderBox = ({drawChart, buy, sell, nextButton}) => {
                 </Button>
                 {orderButton}
                 
-                <GameResult />
+                <GameResult nextButton={nextButton}/>
             </BoxBody>
         </Div>
     );

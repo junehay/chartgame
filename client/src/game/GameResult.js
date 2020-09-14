@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -35,7 +35,7 @@ const reGame = async () => {
     document.location.replace('/game');
 };
 
-const Result = () => {
+const Result = ({nextButton}) => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [vicPercent, setVicPercent] = useState(0);
@@ -43,6 +43,9 @@ const Result = () => {
     const [account, setAccount] = useState(0);
     const [company, setCompany] = useState();
     const [date, setDate] = useState();
+
+    const accGainPercent = ((((100000000+accGainPrice)/100000000)-1)*100).toFixed(2);
+    const nameInput = useRef();
 
     const endGame = async () => {
         const res = await axios.post('/api/endgame');
@@ -53,10 +56,33 @@ const Result = () => {
         setCompany(data.company);
         setDate(data.date);
     };
+
+    const rankSet = async () => {
+        const name = nameInput.current.value;
+        if (name.length === 0) {
+            alert('이름을 입력해주세요');
+            return false;
+        } else {
+            await axios.post('/api/rankset', {
+                name: name,
+                company: company,
+                vicPercent: vicPercent,
+                gainPercent: accGainPercent,
+                account: account
+            });
+            await axios.get('/api/gameset');
+            document.location.replace('/');
+        }
+    }
   
     const handleOpen = () => {
-        endGame();
-        setOpen(true);
+        if(nextButton === 'buy'){
+            endGame();
+            setOpen(true);
+        }else{
+            alert('포지션 정리 후 게임종료가 가능합니다.');
+            return false;
+        }
     };
   
     const handleClose = () => {
@@ -98,38 +124,36 @@ const Result = () => {
                         <TitleBox>
                             <Typography variant="h6" style={{fontFamily: 'auto', color:'white'}}>게임 결과</Typography>
                         </TitleBox>
-                            <CardContent style={{display: 'flex', height: '280px'}}>
-                                <div style={{width: '30%', float:'left'}}>
-                                    <Typography variant="button" display="block" gutterBottom>승률 :</Typography>
-                                    <Typography variant="button" display="block" gutterBottom>평가손익 :</Typography>
-                                    <Typography variant="button" display="block" gutterBottom>수익률 :</Typography>
-                                    <Typography variant="button" display="block" gutterBottom>잔고 :</Typography>
-                                    <br />
-                                    <Typography variant="button" display="block" gutterBottom>종목 :</Typography>
-                                    <Typography variant="button" display="block" gutterBottom>기간 :</Typography>
-                                    <br />
-                                    <Typography variant="button" display="block" gutterBottom>랭킹 등록 :</Typography>
-                                </div>
-                                <div style={{width: '60%', float:'left'}}>
-                                    <Typography variant="button" display="block" gutterBottom>{vicPercent}%</Typography>
-                                    <Typography variant="button" display="block" style={style} gutterBottom>{accGainPrice.toLocaleString()}</Typography>
-                                    <Typography variant="button" display="block" style={style} gutterBottom>{((((100000000+accGainPrice)/100000000)-1)*100).toFixed(2)}</Typography>
-                                    <Typography variant="button" display="block" gutterBottom>{account.toLocaleString()}원</Typography>
-                                    <br />
-                                    <Typography variant="button" display="block" gutterBottom>{company}</Typography>
-                                    <Typography variant="button" display="block" gutterBottom>{date}</Typography>
-                                    <br />
-                                    <input style={{width:'100px'}}/><Button size="small" variant="outlined" style={{marginLeft: '10px'}}>등록</Button>
-                                </div>
-                            </CardContent>
+
+                        <CardContent style={{display: 'flex', height: '280px'}}>
+                            <div style={{width: '30%', float:'left'}}>
+                                <Typography variant="button" display="block" gutterBottom>승률 :</Typography>
+                                <Typography variant="button" display="block" gutterBottom>평가손익 :</Typography>
+                                <Typography variant="button" display="block" gutterBottom>수익률 :</Typography>
+                                <Typography variant="button" display="block" gutterBottom>잔고 :</Typography>
+                                <br />
+                                <Typography variant="button" display="block" gutterBottom>종목 :</Typography>
+                                <Typography variant="button" display="block" gutterBottom>기간 :</Typography>
+                                <br />
+                                <Typography variant="button" display="block" gutterBottom>랭킹 등록 :</Typography>
+                            </div>
+                            <div style={{width: '60%', float:'left'}}>
+                                <Typography variant="button" display="block" gutterBottom>{vicPercent}%</Typography>
+                                <Typography variant="button" display="block" style={style} gutterBottom>{accGainPrice.toLocaleString()}</Typography>
+                                <Typography variant="button" display="block" style={style} gutterBottom>{accGainPercent}</Typography>
+                                <Typography variant="button" display="block" gutterBottom>{account.toLocaleString()}원</Typography>
+                                <br />
+                                <Typography variant="button" display="block" gutterBottom>{company}</Typography>
+                                <Typography variant="button" display="block" gutterBottom>{date}</Typography>
+                                <br />
+                                <input ref={nameInput} maxLength={8} style={{width:'110px'}}/><Button size="small" variant="outlined" style={{marginLeft: '10px'}} onClick={rankSet}>등록</Button>
+                            </div>
+                        </CardContent>
+
                         <EndBox>
-                        <Button size="small" variant="outlined" color="primary" style={{marginRight: '170px'}} onClick={reGame}>
-                            다시하기
-                        </Button>
+                            <Button size="small" variant="outlined" color="primary" style={{marginRight: '170px'}} onClick={reGame}>다시하기</Button>
                             <Link to="/">
-                        <Button size="small" variant="outlined" color="primary">
-                                메인으로
-                        </Button>    
+                                <Button size="small" variant="outlined" color="primary">메인으로</Button>    
                             </Link>
                         </EndBox>
                     </Card>

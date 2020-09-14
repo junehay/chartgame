@@ -4,12 +4,5 @@ th {
 
 th, td {
     font-size: 13px !important;
-}
-
-th:first-child {
-    text-align: center;
-}
-
-td:first-child {
-    text-align: center;
+    text-align: center !important;
 }

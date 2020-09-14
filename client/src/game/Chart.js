@@ -161,9 +161,9 @@ const Chart = () => {
     const sell = async () => {
         const res = await axios.post('/api/sell');
         if (res.data.result === 'win') {
-            setWinCount(val => winCount+1)
+            setWinCount(winCount+1)
         } else {
-            setLoseCount(val => loseCount+1)
+            setLoseCount(loseCount+1)
         }
         setBuyPrice(0);
         setNextButton('buy');

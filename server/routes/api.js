@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('../models/index').sequelize;
 const { Company } = require('../models');
+const { Record } = require('../models');
 const redis = require('redis');
 const client = redis.createClient();
 const util = require('util');
@@ -79,7 +80,6 @@ router.get('/gameset', async (req, res) => {
         client.hset(uuid, 'gameData', JSON.stringify(gameData));
         client.expire('gameData', 3600);
 
-        // res.json(gameData);
         res.redirect('/api/gameget');
     } catch (err) {
         console.log(err);
@@ -179,6 +179,48 @@ router.post('/endgame', async (req, res) => {
         console.log('err : ', err)
     }
 });
+
+router.post('/rankset', async (req, res) => {
+    const name = req.body.name;
+    const company = req.body.company;
+    const vicPercent = parseFloat(req.body.vicPercent);
+    const gainPercent = parseFloat(req.body.gainPercent);
+    const account = req.body.account;
+    try {
+        await Record.create({
+            name: name,
+            company: company,
+            vic_percent: vicPercent,
+            gain_percent: gainPercent,
+            account: account
+        });
+        res.send('rankset');
+    } catch (err) {
+        console.log('err : ', err)
+    }
+});
+
+router.get('/ranklist', async (req, res) => {
+    let recordData = await Record.findAll({
+        order: [
+            ['account', 'DESC']
+        ]
+    });
+
+    let rankList = recordData.map((e, index) => {
+        let data = {};
+        data.name = e.name;
+        data.company = e.company;
+        data.vicPercent = e.vic_percent;
+        data.gainPercent = e.gain_percent;
+        data.account = e.account;
+
+        return data;
+    });
+
+    res.json(rankList);
+});
+
 
 async function getRedisData(key, field){
     const hgetPromise = util.promisify(client.hget).bind(client);
