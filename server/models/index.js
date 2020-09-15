@@ -37,5 +37,6 @@ db.Sequelize = Sequelize;
 
 db.Company = require('./company')(sequelize, Sequelize);
 db.Record = require('./record')(sequelize, Sequelize);
+db.Member = require('./member')(sequelize, Sequelize);
 
 module.exports = db;

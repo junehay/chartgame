@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Main from './routes/Main';
 import Game from './routes/Game';
+import Admin from './routes/Admin';
 
 class App extends React.Component {
   render() {
@@ -12,6 +13,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={Main}/>
             <Route exact path='/game' component={Game}/>
+            <Route exact path='/admin' component={Admin}/>
           </Switch>
         </div>
       </Router>

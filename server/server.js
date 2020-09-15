@@ -2,12 +2,15 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 const config = require('./config/config.json');
 const api = require('./routes/api.js');
+const admin = require('./routes/admin.js');
 
 // middleware
 app.use(session({
-    secret: config.secret,
+    secret: config.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -16,6 +19,8 @@ app.use(session({
 }));
 app.use(express.json()); 
 app.use(express.urlencoded( {extended : false } ));
+app.use(logger('dev'));
+app.use(cookieParser(config.SECRET_KEY));
 
 // session setting
 app.use((req, res, next) => {
@@ -27,6 +32,7 @@ app.use((req, res, next) => {
 
 // router
 app.use('/api', api);
+app.use('/api/admin', admin);
 
 
 // error handler
