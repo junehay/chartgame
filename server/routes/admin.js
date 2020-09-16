@@ -2,14 +2,17 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const moment = require('moment');
+const axios = require('axios');
+const iconv = require('iconv-lite');
+const cheerio = require('cheerio');
+const schedule = require('node-schedule');
 const sequelize = require('../models/index').sequelize;
 const { Company } = require('../models');
 const { Member } = require('../models');
 const { Record } = require('../models');
-const config = require('../config/config.json');
-sequelize.sync();
+const config = require('../config/config.js');
 
+sequelize.sync();
 
 router.post('/login', async (req, res) => {
     try {
@@ -36,6 +39,10 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/logout', (req, res) => {
+    res.clearCookie('token').send('LOGOUT');
+})
+
 router.use((req, res, next) => {
     try {
         const token = req.signedCookies.token;
@@ -56,14 +63,126 @@ router.post('/', (req, res) => {
 
 router.post('/record/del', async (req, res) => {
     const _id = req.body._id;
+    const all = req.body.all;
     try {
-        await Record.destroy({
-            where: {id: _id}
+        if (all) {
+            await Record.destroy({
+                where: {},
+                truncate: true
+            });
+            console.log('Ranklist Reset!!!!!!!');
+            res.send('DEL');
+        } else {
+            await Record.destroy({
+                where: {id: _id}
+            });
+            res.send('DEL');
+        }
+    } catch (err) {
+        console.log('err : ', err);
+    }
+});
+
+router.post('/company', async (req, res) => {
+    try {
+        const companyData = await Company.findAll({
+            attributes: ['code', 'name', [sequelize.fn('COUNT', sequelize.col('code')), 'rows'], 'createdAt'],
+            group: ['code'],
+            raw: true
+        });
+        res.json(companyData);
+    } catch (err) {
+        console.log('err : ', err);
+    }
+});
+
+router.post('/company/del', async (req, res) => {
+    const code = req.body.code;
+    try {
+        await Company.destroy({
+            where: {code: code}
         });
         res.send('DEL');
     } catch (err) {
         console.log('err : ', err);
     }
 });
+
+router.post('/company/add', async (req, res) => {
+    const code = req.body.code;
+    const name = req.body.name;
+    for(let i=1; i<=10; i++){
+        const getHtml = async () => {
+            try {
+                return await axios.get(`https://finance.naver.com/item/sise_day.nhn?code=${code}&page=${i}`, {
+                    responseType: 'arraybuffer',
+                    responseEncoding: 'binary'
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        await getHtml()
+            .then(html => {
+                let decodeHtml = iconv.decode(html.data, 'EUC-KR');
+                let list = [];
+                const $ = cheerio.load(decodeHtml);
+                const $bodyList = $('table tbody tr');
+                $bodyList.each(function (i, elem) {
+                    if($(this).find('.gray03').text()){
+                        list[i] = {
+                            code: code,
+                            name: name,
+                            date: $(this).find('.gray03').text(),
+                            endPrice: $(this).find('.p11').first().text(),
+                            startPrice: $(this).find('.p11').eq(2).text(),
+                            highPrice: $(this).find('.p11').eq(3).text(),
+                            lowPrice: $(this).find('.p11').eq(4).text(),
+                            volume: $(this).find('.p11').last().text()
+                        }
+                    }
+                });
+                let filterList = list.filter((val, index, arr) => {
+                    if(val){
+                        return val;
+                    }
+                });
+                return filterList;
+            })
+            .then(list => {
+                for(let i=0; i<list.length; i++){
+                    Company.create({
+                        code: code,
+                        name: name,
+                        trading_date: list[i].date.replace(/\./g, '-'),
+                        end_price: parseInt(list[i].endPrice.replace(/,/g, '')),
+                        start_price: parseInt(list[i].startPrice.replace(/,/g, '')),
+                        high_price: parseInt(list[i].highPrice.replace(/,/g, '')),
+                        low_price: parseInt(list[i].lowPrice.replace(/,/g, '')),
+                        volume: parseInt(list[i].volume.replace(/,/g, ''))
+                    })
+                }
+            })
+            .catch(err => {
+               console.error(err);
+               res.json(err);
+            })
+    }
+    res.send('ADD');
+});
+
+// node-schedule
+schedule.scheduleJob('0 0 9 * * 1', async () => {
+    try { 
+        await Record.destroy({
+            where: {},
+            truncate: true
+        });
+        console.log('Ranklist Reset!!!!!!!');
+    } catch (err) {
+        console.log('err : ', err)
+    }
+});
+
 
 module.exports = router;

@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(30),
             allowNULL: false
         },
-        group_name: {
-            type: DataTypes.STRING(30),
-            allowNULL: false
-        },
         trading_date: {
             type: DataTypes.DATE, 
             allowNULL: true,
