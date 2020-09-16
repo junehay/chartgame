@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const cookie = require('cookie');
+const moment = require('moment');
 const sequelize = require('../models/index').sequelize;
+const { Company } = require('../models');
 const { Member } = require('../models');
+const { Record } = require('../models');
 const config = require('../config/config.json');
-
 sequelize.sync();
 
 
@@ -53,5 +54,16 @@ router.post('/', (req, res) => {
     res.send('admin');
 });
 
+router.post('/record/del', async (req, res) => {
+    const _id = req.body._id;
+    try {
+        await Record.destroy({
+            where: {id: _id}
+        });
+        res.send('DEL');
+    } catch (err) {
+        console.log('err : ', err);
+    }
+});
 
 module.exports = router;

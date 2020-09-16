@@ -208,6 +208,7 @@ router.get('/ranklist', async (req, res) => {
 
     let rankList = recordData.map((e, index) => {
         let data = {};
+        data._id = e.id;
         data.name = e.name;
         data.company = e.company;
         data.vicPercent = e.vic_percent;
