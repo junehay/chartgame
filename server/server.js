@@ -4,7 +4,7 @@ const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const config = require('./config/config.json');
+const config = require('./config/config.js');
 const api = require('./routes/api.js');
 const admin = require('./routes/admin.js');
 
