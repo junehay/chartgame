@@ -32,7 +32,13 @@ router.post('/shift', async (req, res) => {
 router.post('/gameset', async (req, res) => {
     try {
         const uuid = req.session.uuid;
-        const companyCode = '005930'; // 랜덤 코드
+        const code = await Company.findOne({
+            attributes: ['code'],
+            order: sequelize.random(),
+            raw: true
+        });
+        
+        const companyCode = code.code;
         let companyData = await Company.findAll({
             where: {
                 code: companyCode
