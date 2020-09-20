@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: react build
+        run: |
+          cd client
+          npm run build
+          cd ..
+
+      - name: docker build
+        run: |
+          docker build -t junehay/chartgame:v2 .
+          echo test, and deploy your project.
+          
+      - name: docker login
+        run: docker login -u ${{secret.DOCKER_NAME}} -p ${{secret.DOCKER_PWD}}
+      
+      - name: docker-hub push
+        run: docker push ${{secret.DOCKER_NAME}}/chartgame:v2
