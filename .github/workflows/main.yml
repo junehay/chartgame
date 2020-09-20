@@ -25,7 +25,7 @@ jobs:
         run: CI=false npm run build
 
       - name: docker build
-        run: docker build -t junehay/chartgame:v1.092110 .
+        run: docker build -t junehay/chartgame:v1.09210 .
           
       - name: docker login
         run: docker login -u ${{secrets.DOCKER_NAME}} -p ${{secrets.DOCKER_PWD}}
