@@ -9,19 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: checkout source code
+        uses: actions/checkout@master
+    
+      - name: node_modules delete
+        working-directory: ./client
+        run: rm -rf node_modules package-lock.json
+        
+      - name: npm install
+        working-directory: ./client
+        run: npm install
+        
       - name: react build
-        run: |
-          cd client
-          npm run build
-          cd ..
+        working-directory: ./client
+        run: CI=false npm run build
 
       - name: docker build
-        run: |
-          docker build -t junehay/chartgame:v2 .
-          echo test, and deploy your project.
+        run: docker build -t junehay/chartgame:v1.0921 .
           
       - name: docker login
-        run: docker login -u ${{secret.DOCKER_NAME}} -p ${{secret.DOCKER_PWD}}
+        run: docker login -u ${{secrets.DOCKER_NAME}} -p ${{secrets.DOCKER_PWD}}
       
       - name: docker-hub push
-        run: docker push ${{secret.DOCKER_NAME}}/chartgame:v2
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:v1.0921

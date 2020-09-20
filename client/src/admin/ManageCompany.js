@@ -57,6 +57,7 @@ export default function MaterialTableDemo() {
       } else {
         alert('오류가 발생하였습니다.')
       }
+      codeInput.current.firstChild.value = '';
       nameInput.current.firstChild.value = '';
     }
   }
