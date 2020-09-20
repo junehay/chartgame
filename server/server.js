@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('morgan');
@@ -17,9 +18,10 @@ app.use(session({
         maxAge: 1000 * 60 * 60
     },
 }));
+app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.json()); 
 app.use(express.urlencoded( {extended : false } ));
-app.use(logger('dev'));
 app.use(cookieParser(config.SECRET_KEY));
 
 // session setting
@@ -34,6 +36,14 @@ app.use((req, res, next) => {
 app.use('/api', api);
 app.use('/api/admin', admin);
 
+// react build
+app.get('*', (req, res, next) => {
+    if (process.env.NODE_ENV === 'production') {
+        res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+    } else {
+        next();
+    }
+});
 
 // error handler
 app.use((req, res, next) => {

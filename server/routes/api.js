@@ -98,7 +98,6 @@ router.post('/gameget', async (req, res) => {
         res.redirect(307, '/api/gameset')
     }else{
         const jsonData = JSON.parse(gameData);
-        console.log(jsonData['chart'].length)
         res.json(jsonData);
     }
 });
