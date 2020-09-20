@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Redirect, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Main from './routes/Main';
 import Game from './routes/Game';
@@ -14,6 +14,7 @@ class App extends React.Component {
             <Route exact path='/' component={Main}/>
             <Route exact path='/game' component={Game}/>
             <Route exact path='/admin' component={Admin}/>
+            <Route><Redirect to='/'/></Route>
           </Switch>
         </div>
       </Router>

@@ -46,5 +46,9 @@ app.use((err, req, res, next) => {
 });
 
 // server
-const port = 3001;
-app.listen(port, () => console.log(`port is ${port}`));
+const options = {
+    host: process.env.NODE_HOST || 'localhost',
+    port: process.env.NODE_PORT || 3001,
+}
+
+app.listen(options, () => console.log(`server on!!! ${options.host}:${options.port}`));

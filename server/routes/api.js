@@ -4,7 +4,7 @@ const sequelize = require('../models/index').sequelize;
 const { Company } = require('../models');
 const { Record } = require('../models');
 const redis = require('redis');
-const client = redis.createClient();
+const client = redis.createClient('6379', process.env.REDIS_HOST);
 const util = require('util');
 const moment = require('moment');
 

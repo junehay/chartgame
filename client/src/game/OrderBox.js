@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import * as Api from './CallApi';
 import GameResult from './GameResult';
 
+const reset = async () => {
+    const chk = window.confirm('초기화 하시겠습니까?');
+    if(chk){
+        await axios.post('/api/gameset');
+        document.location.replace('/game');
+    }
+};
 
 const OrderBox = ({drawChart, buy, sell, nextButton}) => {
     const [time, setTime] = useState(30);
@@ -66,12 +74,10 @@ const OrderBox = ({drawChart, buy, sell, nextButton}) => {
                 <span>주문</span><span style={{fontSize: 'smaller'}}> (남은횟수 : {time})</span>
             </BoxHead>
             <BoxBody>
-                <Button size="small" variant="outlined" style={{marginRight: '30px'}} onClick={passClick}>
-                    Pass
-                </Button>
+                <Button size="small" variant="outlined" style={{marginRight: '20px'}} onClick={passClick}>Pass</Button>
                 {orderButton}
-                
-                <GameResult nextButton={nextButton}/>
+                {time === 0 ? '' : <Button size="small" variant="outlined" style={{float: 'right'}}  onClick={reset}>Reset</Button>}
+                <GameResult nextButton={nextButton} time={time}/>
             </BoxBody>
         </Div>
     );

@@ -35,7 +35,7 @@ const reGame = async () => {
     document.location.replace('/game');
 };
 
-const Result = ({nextButton}) => {
+const Result = ({nextButton, time}) => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [vicPercent, setVicPercent] = useState(0);
@@ -103,9 +103,7 @@ const Result = ({nextButton}) => {
 
     return (
         <>
-        <Button size="small" variant="outlined" style={{float: 'right'}} onClick={handleOpen}>
-            End Game
-        </Button>
+        {time !== 0 ? '' : <Button size="small" variant="outlined" style={{float: 'right'}} onClick={handleOpen}>End Game</Button>}
           <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
