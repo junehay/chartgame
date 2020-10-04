@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 
-const socket = io('localhost:3001');
+const socket = io(`${process.env.HOST}:${process.env.NODE_PORT}`);
 
 socket.on('update', (data) => {
   let chat = document.getElementById('chat');
@@ -76,7 +76,7 @@ const send = () => {
 }
 
 const enterKey = () => {
-  if (window.event.keyCode == 13) {
+  if (window.event.keyCode === 13) {
     send();
   }
 };
@@ -87,10 +87,14 @@ const GroupChat = () => {
   const [userName, setUserName] = useState();
 
   socket.on('connect', async () => {
-    const id = await axios.post('/api/id');
-    const name = id.data.substr(0,6);
-    setUserName(name);
-    socket.emit('newUser', name);
+    try {
+      const id = await axios.post('/api/id');
+      const name = id.data.substr(0,6);
+      setUserName(name);
+      socket.emit('newUser', name);
+    } catch(err) {
+      console.log('err : ', err);
+    }
   });
 
   useEffect(() => {
