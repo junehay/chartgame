@@ -25,10 +25,10 @@ jobs:
         run: CI=false npm run build
 
       - name: docker build
-        run: docker build -t junehay/chartgame:v1.09210 .
+        run: docker build -t junehay/chartgame:v1.1005 .
           
       - name: docker login
         run: docker login -u ${{secrets.DOCKER_NAME}} -p ${{secrets.DOCKER_PWD}}
       
       - name: docker-hub push
-        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:v1.09210
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:v1.1005
