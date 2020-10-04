@@ -10,6 +10,10 @@ const moment = require('moment');
 
 sequelize.sync();
 
+router.post('/id', (req, res) => {
+    res.send(req.session.uuid);
+});
+
 router.post('/shift', async (req, res) => {
     try{
         const uuid = req.session.uuid;

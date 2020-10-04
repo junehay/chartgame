@@ -73,69 +73,69 @@ const RankList = () => {
     };
 
     return (
-        <div>
-            <List>
-            <ListHead>
-                <Typography variant="h6" style={{padding: '3px 5px 3px 16px', display: 'inline-block'}}>실시간 랭킹</Typography>
-                <Typography variant="caption">(매주 월요일 오전 9시 초기화)</Typography>
-            </ListHead>
-             <Paper>
-                <TableContainer>
-                    <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                        {columns.map((column) => (
-                            <TableCell
-                            key={column.id}
-                            align={column.align}
-                            style={{ minWidth: column.minWidth }}
-                            >
-                            {column.label}
+        <List>
+        <ListHead>
+            <Typography variant="h6" style={{padding: '3px 5px 3px 16px', display: 'inline-block'}}>실시간 랭킹</Typography>
+            <Typography variant="caption">(매주 월요일 오전 9시 초기화)</Typography>
+        </ListHead>
+        <Paper>
+            <TableContainer>
+                <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                    <TableRow>
+                    {columns.map((column) => (
+                        <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                        >
+                        {column.label}
+                        </TableCell>
+                    ))}
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                    return (
+                        <TableRow hover key={index}>
+                        {columns.map((column) => {
+                            const value = row[column.id];
+                            return (
+                            <TableCell key={column.id} align={column.align}>
+                                {value}
                             </TableCell>
-                        ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                        return (
-                            <TableRow hover key={index}>
-                            {columns.map((column) => {
-                                const value = row[column.id];
-                                return (
-                                <TableCell key={column.id} align={column.align}>
-                                    {value}
-                                </TableCell>
-                                );
-                            })}
-                            </TableRow>
-                        );
+                            );
                         })}
-                    </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[10]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
-            </Paper>
-
-            <StartBox>
-                <Link to="/game" style={{padding: "10px 0px"}}><Button size="large" variant="outlined" color="primary">차트게임 시작!!!</Button></Link>
-            </StartBox>
-            </List>
-        </div>
+                        </TableRow>
+                    );
+                    })}
+                </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+        </Paper>
+        <StartBox>
+            <Link to="/game" style={{padding: "10px 0px"}}><Button size="large" variant="outlined" color="primary">차트게임 시작!!!</Button></Link>
+        </StartBox>
+        </List>
     );
 };
 
 const List = styled.div`
-    margin: 0px auto;
-    width: 620px;
-    margin-top: 60px;
+    margin-left: 15%;
+    width: 35%;
+    min-width: 610px;
+    margin-top: 50px;
+    margin-right: 20px;
+    display: inline-block;
 `;
 
 const ListHead = styled.div`
