@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 
-const socket = io(`${process.env.HOST}:${process.env.NODE_PORT}`);
+const socket = io(`${process.env.REACT_APP_HOST}`);
 
 socket.on('update', (data) => {
   let chat = document.getElementById('chat');
