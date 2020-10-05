@@ -5,6 +5,7 @@
     border-radius: 5px;
     text-align: center;
     width: 32%;
+    min-width: 525px;
     height: 700px;
     display: block;
     float: right;

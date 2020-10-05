@@ -94,12 +94,14 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    --numUsers;
-    socket.broadcast.emit('update', {
-      type: 'disconnect',
-      message: `${socket.name}님이 퇴장하셨습니다.`,
-    });
-    socket.emit('numUsers', numUsers);
-    socket.broadcast.emit('numUsers', numUsers);
+    if (numUsers > 0) {
+      --numUsers;
+      socket.broadcast.emit('update', {
+        type: 'disconnect',
+        message: `${socket.name}님이 퇴장하셨습니다.`,
+      });
+      socket.emit('numUsers', numUsers);
+      socket.broadcast.emit('numUsers', numUsers);
+    }
   });
 });
