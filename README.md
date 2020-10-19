@@ -1,14 +1,32 @@
-## K-chartgame
+## Description
+> 과거 일별 주가를 웹 스크래핑하여 데이터 정리
+>> google-chart로 표현한 차트게임
 
-과거 일별 주가 데이터를 기반으로 google-chart로 표현.
+## Gif
+### Chartgame
+![chartgame](https://user-images.githubusercontent.com/53490344/96503682-9d617d00-128e-11eb-8c05-d45a3d3c088c.gif)
+### Admin
+![chartgame_admin](https://user-images.githubusercontent.com/53490344/96504437-a56dec80-128f-11eb-98bc-865946d1ef54.gif)
 
-React Hooks, Node.js, MySQL(AWS RDS), redis
+## Skills
+### Client
+  - React Hooks
+### Server
+  - Node.js
+  - AWS RDS(MySQL)
+  - Redis
+### Infra
+  - Github Actions
+  - AWS EC2(ubuntu)
+  - AWS EC2 Load Balancer(SSL)
+  - Docker
+  - DockerHub
+  - Docker-compose
 
-Github Actions 활용 react 빌드 후 node.js와 Docker hub에 push
+----------------------------------
 
-ec2 ubuntu 환경에서 docker-compose로 배포 중
-
-----
-### next
-채팅 내용 저장
-dockerhub tag 자동 변경...?
+## Refactoring plan
+ - Recoil(react state management library)
+ - Typescript
+ - Error handler
+ - Improvement performance
