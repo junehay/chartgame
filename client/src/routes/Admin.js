@@ -16,7 +16,6 @@ const Admin = () => {
             .then(setArea(<Dashboard />))
             .catch(err => {
                 setArea(<Login />);
-                console.log('err : ', err.response);
             })
     }, []);
     return (

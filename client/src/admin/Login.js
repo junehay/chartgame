@@ -38,7 +38,6 @@ const Submit = async (e) => {
             id: e.target.id.value,
             password: e.target.password.value
         });
-        console.log('ddd : ', res.data)
         if (res.data === 'OK') {
             document.location.reload();
         }

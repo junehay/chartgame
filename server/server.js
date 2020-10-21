@@ -61,8 +61,10 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err.stack);
-  res.status(500).send('500errrrrrrr');
+  logger.error(err);
+  res.status(err.status || 500).json({
+    message: err.message || 'unknown error'
+  });
 });
 
 // server
@@ -79,7 +81,6 @@ const server = app.listen(options, () =>
 const io = socketIo(server);
 
 let numUsers = 0;
-// let chatContent = [];
 
 io.sockets.on('connection', (socket) => {
   socket.on('newUser', (name) => {
@@ -96,7 +97,6 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('message', (data) => {
     data.name = socket.name;
-    // chatContent.push(data);
     socket.broadcast.emit('update', data);
   });
 
