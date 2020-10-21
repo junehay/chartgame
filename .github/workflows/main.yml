@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%m%d%H%M')"
+        
+      - name: Echo current date
+        run: echo $NOW
+
       - name: checkout source code
         uses: actions/checkout@master
     
@@ -25,10 +31,10 @@ jobs:
         run: CI=false npm run build
 
       - name: docker build
-        run: docker build -t junehay/chartgame:v1.1005 .
+        run: docker build -t junehay/chartgame:v0.5.$NOW .
           
       - name: docker login
         run: docker login -u ${{secrets.DOCKER_NAME}} -p ${{secrets.DOCKER_PWD}}
       
       - name: docker-hub push
-        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:v1.1005
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:v0.5.$NOW
