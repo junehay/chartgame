@@ -1,14 +1,16 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
-const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const socketIo = require('socket.io');
 const config = require('./config/config.js');
 const api = require('./routes/api.js');
 const admin = require('./routes/admin.js');
+const logger = require('./config/logger');
 
 // middleware
 app.use(
@@ -21,7 +23,12 @@ app.use(
     },
   })
 );
-app.use(logger('dev'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet());
+  app.use(morgan('combined', { stream: logger.stream }));
+} else {
+  app.use(morgan('dev'));
+}
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

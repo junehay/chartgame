@@ -2,7 +2,7 @@
   "name": "chartgame",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
@@ -24,6 +24,7 @@
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "helmet": "^4.1.1",
     "iconv-lite": "^0.6.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
@@ -35,6 +36,8 @@
     "redis": "^3.0.2",
     "sequelize": "^6.3.5",
     "socket.io": "^2.3.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   }
 }
