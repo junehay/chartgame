@@ -40,4 +40,4 @@ jobs:
         run: docker push ${{secrets.DOCKER_NAME}}/chartgame:0.$NOW
 
       - name: docker-hub push(latest)
-        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:latest
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame
