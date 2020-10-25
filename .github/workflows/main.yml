@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -10,31 +10,34 @@ jobs:
 
     steps:
       - name: Set current date as env variable
-        run: echo "NOW=$(date +'%m%d%H%M')" >> $GITHUB_ENV
-        
+        run: echo "NOW=$(date +'%m%d%H')" >> $GITHUB_ENV
+
       - name: Echo current date
         run: echo $NOW
 
       - name: checkout source code
         uses: actions/checkout@master
-    
+
       - name: node_modules delete
         working-directory: ./client
         run: rm -rf node_modules package-lock.json
-        
+
       - name: npm install
         working-directory: ./client
         run: npm install
-        
+
       - name: react build
         working-directory: ./client
         run: CI=false npm run build
 
       - name: docker build
-        run: docker build -t junehay/chartgame:v0.5.$NOW .
-          
+        run: docker build -t junehay/chartgame:0.$NOW .
+
       - name: docker login
         run: docker login -u ${{secrets.DOCKER_NAME}} -p ${{secrets.DOCKER_PWD}}
-      
+
       - name: docker-hub push
-        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:v0.5.$NOW
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:0.$NOW
+
+      - name: docker-hub push(latest)
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:latest

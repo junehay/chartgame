@@ -4,6 +4,7 @@ RUN useradd --user-group --create-home --shell /bin/false app &&\
   npm install --global npm@6.14.4
 RUN mkdir -p client/build
 RUN mkdir -p server
+ENV TZ Asia/Seoul
 
 WORKDIR /server
 
