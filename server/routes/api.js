@@ -33,7 +33,7 @@ router.post('/shift', async (req, res, next) => {
   }
 });
 
-router.post('/gameset', async (req, res) => {
+router.post('/gameset', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const randomCode = await Company.findOne({
@@ -94,7 +94,7 @@ router.post('/gameset', async (req, res) => {
   }
 });
 
-router.post('/gameget', async (req, res) => {
+router.post('/gameget', async (req, res, next) => {
   const uuid = req.session.uuid;
   const gameData = await getRedisData(uuid, 'gameData');
   if (!gameData) {
@@ -105,7 +105,7 @@ router.post('/gameget', async (req, res) => {
   }
 });
 
-router.post('/buy', async (req, res) => {
+router.post('/buy', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
@@ -127,7 +127,7 @@ router.post('/buy', async (req, res) => {
   }
 });
 
-router.post('/sell', async (req, res) => {
+router.post('/sell', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
@@ -162,7 +162,7 @@ router.post('/sell', async (req, res) => {
   }
 });
 
-router.post('/endgame', async (req, res) => {
+router.post('/endgame', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
@@ -187,7 +187,7 @@ router.post('/endgame', async (req, res) => {
   }
 });
 
-router.post('/rankset', async (req, res) => {
+router.post('/rankset', async (req, res, next) => {
   try {
     const name = req.body.name;
     const company = req.body.company;
@@ -207,7 +207,7 @@ router.post('/rankset', async (req, res) => {
   }
 });
 
-router.get('/ranklist', async (req, res) => {
+router.get('/ranklist', async (req, res, next) => {
   const recordData = await Record.findAll({
     order: [
       ['account', 'DESC']

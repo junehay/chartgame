@@ -15,7 +15,7 @@ const { ValidationError } = require('../utils/error.js');
 
 sequelize.sync();
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
   try {
     const id = req.body.id;
     const pwd = req.body.password;
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/logout', (req, res) => {
+router.post('/logout', (req, res, next) => {
   res.clearCookie('token').send('LOGOUT');
 })
 
@@ -66,11 +66,11 @@ router.use((req, res, next) => {
   }
 });
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   res.send('admin');
 });
 
-router.post('/record/del', async (req, res) => {
+router.post('/record/del', async (req, res, next) => {
   const _id = req.body._id;
   const all = req.body.all;
   try {
@@ -92,7 +92,7 @@ router.post('/record/del', async (req, res) => {
   }
 });
 
-router.post('/company', async (req, res) => {
+router.post('/company', async (req, res, next) => {
   try {
     const companyData = await Company.findAll({
       attributes: ['code', 'name', [sequelize.fn('COUNT', sequelize.col('code')), 'rows'], 'createdAt'],
@@ -105,7 +105,7 @@ router.post('/company', async (req, res) => {
   }
 });
 
-router.post('/company/del', async (req, res) => {
+router.post('/company/del', async (req, res, next) => {
   const code = req.body.code;
   try {
     await Company.destroy({
@@ -117,7 +117,7 @@ router.post('/company/del', async (req, res) => {
   }
 });
 
-router.post('/company/add', async (req, res) => {
+router.post('/company/add', async (req, res, next) => {
   const code = req.body.code;
   const name = req.body.name;
   for(let i=1; i<=10; i++){
