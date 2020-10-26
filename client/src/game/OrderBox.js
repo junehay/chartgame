@@ -9,7 +9,7 @@ import GameResult from './GameResult';
 const reset = async () => {
     const chk = window.confirm('초기화 하시겠습니까?');
     if(chk){
-        await axios.post('/api/gameset');
+        await axios.get('/api/gameset');
         document.location.replace('/game');
     }
 };

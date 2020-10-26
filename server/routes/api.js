@@ -10,30 +10,11 @@ const moment = require('moment');
 
 sequelize.sync();
 
-router.post('/id', (req, res) => {
+router.get('/id', (req, res, next) => {
   res.send(req.session.uuid);
 });
 
-router.post('/shift', async (req, res, next) => {
-  try {
-    const uuid = req.session.uuid;
-    const gameData = await getRedisData(uuid, 'gameData');
-    const jsonData = JSON.parse(gameData);
-    if (jsonData['chart'].length > 50) {
-      const shiftData = jsonData['chart'].shift();
-      client.hset(uuid, 'gameData', JSON.stringify(jsonData));
-      client.expire('gameData', 3600);
-
-      res.json(shiftData);
-    } else {
-      res.send('end');
-    }
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.post('/gameset', async (req, res, next) => {
+router.get('/gameset', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const randomCode = await Company.findOne({
@@ -88,24 +69,43 @@ router.post('/gameset', async (req, res, next) => {
     
     client.hset(uuid, 'gameData', JSON.stringify(gameData));
     client.expire('gameData', 3600);
-    res.redirect(307, '/api/gameget');
+    res.redirect('/api/gamedata');
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/gameget', async (req, res, next) => {
+router.get('/gamedata', async (req, res, next) => {
   const uuid = req.session.uuid;
   const gameData = await getRedisData(uuid, 'gameData');
   if (!gameData) {
-    res.redirect(307, '/api/gameset');
+    res.redirect('/api/gameset');
   } else {
     const jsonData = JSON.parse(gameData);
     res.json(jsonData);
   }
 });
 
-router.post('/buy', async (req, res, next) => {
+router.get('/shift', async (req, res, next) => {
+  try {
+    const uuid = req.session.uuid;
+    const gameData = await getRedisData(uuid, 'gameData');
+    const jsonData = JSON.parse(gameData);
+    if (jsonData['chart'].length > 50) {
+      const shiftData = jsonData['chart'].shift();
+      client.hset(uuid, 'gameData', JSON.stringify(jsonData));
+      client.expire('gameData', 3600);
+
+      res.json(shiftData);
+    } else {
+      res.send('end');
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/buy', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
@@ -127,7 +127,7 @@ router.post('/buy', async (req, res, next) => {
   }
 });
 
-router.post('/sell', async (req, res, next) => {
+router.get('/sell', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
@@ -162,7 +162,7 @@ router.post('/sell', async (req, res, next) => {
   }
 });
 
-router.post('/endgame', async (req, res, next) => {
+router.get('/end', async (req, res, next) => {
   try {
     const uuid = req.session.uuid;
     const gameData = await getRedisData(uuid, 'gameData');
@@ -187,7 +187,7 @@ router.post('/endgame', async (req, res, next) => {
   }
 });
 
-router.post('/rankset', async (req, res, next) => {
+router.post('/rank', async (req, res, next) => {
   try {
     const name = req.body.name;
     const company = req.body.company;

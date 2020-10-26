@@ -81,7 +81,7 @@ const volumeDataOptions = {
 };
 
 const getGameData = async () => {
-    const res = await axios.post('/api/gameget');
+    const res = await axios.get('/api/gamedata');
     const data = res.data;
     return data;
 };
@@ -150,7 +150,7 @@ const Chart = () => {
             .catch(err => console.log(err));
     };
     const buy = async () => {
-        const res = await axios.post('/api/buy');
+        const res = await axios.get('/api/buy');
         setBuyPrice(res.data.nowPrice);
         setNextButton('sell');
         setStocks(res.data.stocks);
@@ -159,7 +159,7 @@ const Chart = () => {
     };
 
     const sell = async () => {
-        const res = await axios.post('/api/sell');
+        const res = await axios.get('/api/sell');
         if (res.data.result === 'win') {
             setWinCount(winCount+1)
         } else {

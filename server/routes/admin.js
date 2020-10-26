@@ -15,7 +15,7 @@ const { ValidationError } = require('../utils/error.js');
 
 sequelize.sync();
 
-router.post('/login', async (req, res, next) => {
+router.post('/auth', async (req, res, next) => {
   try {
     const id = req.body.id;
     const pwd = req.body.password;
@@ -44,7 +44,7 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-router.post('/logout', (req, res, next) => {
+router.delete('/auth', (req, res, next) => {
   res.clearCookie('token').send('LOGOUT');
 })
 
@@ -66,15 +66,14 @@ router.use((req, res, next) => {
   }
 });
 
-router.post('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
   res.send('admin');
 });
 
-router.post('/record/del', async (req, res, next) => {
-  const _id = req.body._id;
-  const all = req.body.all;
+router.delete('/record/:id', async (req, res, next) => {
+  const id = req.params.id;
   try {
-    if (all) {
+    if (id === 'all') {
       await Record.destroy({
         where: {},
         truncate: true
@@ -83,7 +82,7 @@ router.post('/record/del', async (req, res, next) => {
       res.send('DEL');
     } else {
       await Record.destroy({
-        where: {id: _id}
+        where: {id: id}
       });
       res.send('DEL');
     }
@@ -92,7 +91,7 @@ router.post('/record/del', async (req, res, next) => {
   }
 });
 
-router.post('/company', async (req, res, next) => {
+router.get('/company', async (req, res, next) => {
   try {
     const companyData = await Company.findAll({
       attributes: ['code', 'name', [sequelize.fn('COUNT', sequelize.col('code')), 'rows'], 'createdAt'],
@@ -105,19 +104,7 @@ router.post('/company', async (req, res, next) => {
   }
 });
 
-router.post('/company/del', async (req, res, next) => {
-  const code = req.body.code;
-  try {
-    await Company.destroy({
-      where: {code: code}
-    });
-    res.send('DEL');
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.post('/company/add', async (req, res, next) => {
+router.post('/company', async (req, res, next) => {
   const code = req.body.code;
   const name = req.body.name;
   for(let i=1; i<=10; i++){
@@ -173,6 +160,18 @@ router.post('/company/add', async (req, res, next) => {
       })
   }
   res.send('ADD');
+});
+
+router.delete('/company/:code', async (req, res, next) => {
+  const code = req.params.code;
+  try {
+    await Company.destroy({
+      where: {code: code}
+    });
+    res.send('DEL');
+  } catch (err) {
+    next(err);
+  }
 });
 
 // node-schedule

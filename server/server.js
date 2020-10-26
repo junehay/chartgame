@@ -14,7 +14,6 @@ const config = require('./config/config.js');
 const api = require('./routes/api.js');
 const admin = require('./routes/admin.js');
 const logger = require('./config/logger');
-const { cli } = require('winston/lib/winston/config');
 
 // middleware
 app.use(

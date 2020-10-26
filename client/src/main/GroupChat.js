@@ -88,7 +88,7 @@ const GroupChat = () => {
 
   socket.on('connect', async () => {
     try {
-      const id = await axios.post('/api/id');
+      const id = await axios.get('/api/id');
       const name = id.data.substr(0,6);
       setUserName(name);
       socket.emit('newUser', name);

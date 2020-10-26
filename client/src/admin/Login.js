@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const Submit = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.post('/api/admin/login', {
+        const res = await axios.post('/api/admin/auth', {
             id: e.target.id.value,
             password: e.target.password.value
         });

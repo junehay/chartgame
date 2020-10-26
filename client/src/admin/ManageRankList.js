@@ -34,14 +34,14 @@ const getRecordData = async () => {
 }
 
 const deleteData = async (_id) => {
-  const res = await axios.post('/api/admin/record/del', {_id: _id});
+  const res = await axios.delete(`/api/admin/record/${_id}`);
   return res.data;
 }
 
 const deleteDataAll = async () => {
   const chk = window.confirm('모든 랭킹 기록을 삭제하시겠습니까?');
   if (chk) {
-    const res = await axios.post('/api/admin/record/del', {all: true});
+    const res = await axios.delete(`/api/admin/record/all`);
     document.location.reload('/admin');
   }
 }

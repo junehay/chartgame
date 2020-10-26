@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const reGame = async () => {
-    await axios.post('/api/gameset');
+    await axios.get('/api/gameset');
     document.location.replace('/game');
 };
 
@@ -48,7 +48,7 @@ const Result = ({nextButton, time}) => {
     const nameInput = useRef();
 
     const endGame = async () => {
-        const res = await axios.post('/api/endgame');
+        const res = await axios.get('/api/end');
         const data = res.data;
         setVicPercent(data.vicPercent);
         setAccGainPrice(data.accGainPrice);
@@ -63,14 +63,14 @@ const Result = ({nextButton, time}) => {
             alert('이름을 입력해주세요');
             return false;
         } else {
-            await axios.post('/api/rankset', {
+            await axios.post('/api/rank', {
                 name: name,
                 company: company,
                 vicPercent: vicPercent,
                 gainPercent: accGainPercent,
                 account: account
             });
-            await axios.post('/api/gameset');
+            await axios.get('/api/gameset');
             document.location.replace('/');
         }
     }

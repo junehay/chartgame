@@ -15,7 +15,7 @@ function createData(code, name, rows, createdAt) {
 }
 
 const getCompanyData = async () => {
-  const companyData = await axios.post('/api/admin/company');
+  const companyData = await axios.get('/api/admin/company');
   const data = companyData.data;
   const formatData = data.map((e, index) => {
     return createData(e.code, e.name, e.rows, e.createdAt);
@@ -25,7 +25,7 @@ const getCompanyData = async () => {
 }
 
 const deleteData = async (code) => {
-  const res = await axios.post('/api/admin/company/del', {code: code});
+  const res = await axios.delete(`/api/admin/company/${code}`);
   return res.data;
 }
 
@@ -49,7 +49,7 @@ export default function MaterialTableDemo() {
     if (!code) {
       alert('입력값이 잘못되었습니다.')
     } else {
-      const add = await axios.post('/api/admin/company/add', {code: code, name: name});
+      const add = await axios.post('/api/admin/company', {code: code, name: name});
       if (add.data === 'ADD') {
         alert(`${name} 추가 완료!`);
         const data = await getCompanyData();

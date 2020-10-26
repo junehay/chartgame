@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const logout = async () => {
-  await axios.post('/api/admin/logout');
+  await axios.delete('/api/admin/auth');
   document.location.replace('/');
 };
 

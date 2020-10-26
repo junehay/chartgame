@@ -4,7 +4,7 @@ import Login from '../admin/Login';
 import Dashboard from '../admin/Dashboard';
 
 const checkAdmin = async () => {
-    const chk = await axios.post('/api/admin');
+    const chk = await axios.get('/api/admin');
     return chk;
 };
 
