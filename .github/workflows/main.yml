@@ -18,10 +18,6 @@ jobs:
       - name: checkout source code
         uses: actions/checkout@master
 
-      - name: node_modules delete
-        working-directory: ./client
-        run: rm -rf node_modules package-lock.json
-
       - name: npm install
         working-directory: ./client
         run: npm install
