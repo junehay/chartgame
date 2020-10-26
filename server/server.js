@@ -4,6 +4,9 @@ const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const session = require('express-session');
+const redis = require('redis');
+const client = redis.createClient('6379', process.env.REDIS_HOST);
+const redisStroe = require('connect-redis')(session);
 const { v4: uuidv4 } = require('uuid');
 const cookieParser = require('cookie-parser');
 const socketIo = require('socket.io');
@@ -11,6 +14,7 @@ const config = require('./config/config.js');
 const api = require('./routes/api.js');
 const admin = require('./routes/admin.js');
 const logger = require('./config/logger');
+const { cli } = require('winston/lib/winston/config');
 
 // middleware
 app.use(
@@ -21,10 +25,15 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60,
     },
+    store: new redisStroe({client: client})
   })
 );
 if (process.env.NODE_ENV === 'production') {
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false
+    })
+  );
   app.use(morgan('combined', { stream: logger.stream }));
 } else {
   app.use(morgan('dev'));

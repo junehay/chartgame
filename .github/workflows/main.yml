@@ -39,5 +39,8 @@ jobs:
       - name: docker-hub push
         run: docker push ${{secrets.DOCKER_NAME}}/chartgame:0.$NOW
 
+      - name: docker latest tag
+        run: docker tag ${{secrets.DOCKER_NAME}}/chartgame:0.$NOW ${{secrets.DOCKER_NAME}}/chartgame:latest
+
       - name: docker-hub push(latest)
-        run: docker push ${{secrets.DOCKER_NAME}}/chartgame
+        run: docker push ${{secrets.DOCKER_NAME}}/chartgame:latest
