@@ -26,7 +26,6 @@
 ----------------------------------
 
 ## Refactoring plan
- - Recoil(react state management library)
  - Typescript
- - Error handler
  - Improvement performance
+ - Responsive design
