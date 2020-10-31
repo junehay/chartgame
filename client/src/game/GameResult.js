@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
-import { nextButtonState } from './store';
+import { nextButtonState } from '../store';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';

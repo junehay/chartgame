@@ -5,7 +5,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { useRecoilValue } from 'recoil';
-import { nowPriceState, buyPriceState, stocksState, gainPriceState, gainPercentState, winCountState, loseCountState, accGainPriceState, accountState } from './store';
+import { nowPriceState, buyPriceState, stocksState, gainPriceState, gainPercentState, winCountState, loseCountState, accGainPriceState, accountState } from '../store';
 
 const Position = () => {
   const nowPrice = useRecoilValue(nowPriceState);

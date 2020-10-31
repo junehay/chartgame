@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import * as Api from './CallApi';
 import GameResult from './GameResult';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { winCountState, loseCountState, buyPriceState, stocksState, accGainPriceState, accountState, nextButtonState, timeState } from './store';
+import { winCountState, loseCountState, buyPriceState, stocksState, accGainPriceState, accountState, nextButtonState, timeState } from '../store';
 
 const reset = async () => {
   const chk = window.confirm('초기화 하시겠습니까?');

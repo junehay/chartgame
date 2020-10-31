@@ -4,7 +4,7 @@ import OrderBox from './OrderBox';
 import Position from './Position';
 import axios from 'axios';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { priceState, volumeState, nowPriceState, buyPriceState, stocksState, gainPriceState, gainPercentState, nextButtonState, winCountState, loseCountState, accGainPriceState, accountState, timeState } from './store';
+import { priceState, volumeState, nowPriceState, buyPriceState, stocksState, gainPriceState, gainPercentState, nextButtonState, winCountState, loseCountState, accGainPriceState, accountState, timeState } from '../store';
 
 const priceDataSetting = [
   [

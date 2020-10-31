@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 
+// game
 export const priceState = atom({
   key: 'priceState',
   default: 0
