@@ -1,86 +1,73 @@
 /* 메인 */
-#main {
-    margin-right: 15%;
-    margin-top: 50px;
-    border-radius: 5px;
-    text-align: center;
-    width: 32%;
-    min-width: 525px;
-    height: 700px;
-    display: block;
-    float: right;
-    background-color: aliceblue;
-}
-
-/* 채팅 영역 */
-#chat {
-    padding-top: 10px;
-    height: 90%;
-    width: 100%;
-    overflow-y: auto;
-    border: 1px solid #fff;
-}
-
-#foot {
-    padding: 5px 16px;
+.main {
+  margin-right: 15%;
+  margin-top: 50px;
+  border-radius: 5px;
+  text-align: center;
+  width: 32%;
+  min-width: 525px;
+  height: 700px;
+  display: block;
+  float: right;
+  background-color: aliceblue !important;
 }
 
 /* 접속 알림 */
 .connect {
-    width: 100%;
-    margin: auto;
-    text-align: center;
-    color: #34da34;
-    font-size: 13px;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  color: #34da34;
+  font-size: 13px;
 }
 
 /* 접속 종료 알림 */
 .disconnect {
-    width: 100%;
-    margin: auto;
-    text-align: center;
-    color: #d07a7a;
-    font-size: 13px;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  color: #d07a7a;
+  font-size: 13px;
 }
 
 /* 내가 보낸 메시지 */
 .me {
-    width: auto;
-    margin: auto;
-    background-color: lemonchiffon;
-    border-radius: 7px;
-    padding: 2px 6px;
-    word-break: break-word;
-    max-width: 65%;
-    overflow: auto;
-    float: right;
-    font-size: 14px;
+  width: auto;
+  margin: auto;
+  background-color: lemonchiffon;
+  border-radius: 7px;
+  padding: 2px 6px;
+  word-break: break-word;
+  max-width: 65%;
+  overflow: auto;
+  float: right;
+  font-size: 14px;
 }
 
 /* 상대방 ID */
 .name {
-    font-size: x-small;
-    float: left;
-    margin: 0px;
+  font-size: x-small;
+  float: left;
+  margin: 0px;
 }
 
 /* 상대방이 보낸 메시지 */
 .other {
-    width: auto;
-    margin: auto;
-    background-color: white;
-    border-radius: 7px;
-    padding: 2px 6px;
-    word-break: break-word;
-    max-width: 65%;
-    overflow: auto;
-    float: left;
-    font-size: 14px;
+  width: auto;
+  margin: auto;
+  background-color: white;
+  border-radius: 7px;
+  padding: 2px 6px;
+  word-break: break-word;
+  max-width: 65%;
+  overflow: auto;
+  float: left;
+  font-size: 14px;
 }
 
 /* 메시지 div */
 .msgDiv {
-    width: 90%;
-    display: inline-block;
-    margin-bottom: 10px;
+  width: 90%;
+  display: inline-block;
+  margin-bottom: 10px;
 }

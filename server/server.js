@@ -22,9 +22,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 1000 * 60 * 60,
+      maxAge: 1000 * 60 * 60
     },
-    store: new redisStroe({client: client})
+    store: new redisStroe({ client: client })
   })
 );
 if (process.env.NODE_ENV === 'production') {
@@ -78,45 +78,39 @@ app.use((err, req, res, next) => {
 // server
 const options = {
   host: process.env.NODE_HOST || 'localhost',
-  port: process.env.NODE_PORT || 3001,
+  port: process.env.NODE_PORT || 3001
 };
 
-const server = app.listen(options, () =>
-  console.log(`server on!!! ${options.host}:${options.port}`)
-);
+const server = app.listen(options, () => console.log(`server on!!! ${options.host}:${options.port}`));
 
 // socket.io
 const io = socketIo(server);
 
-let numUsers = 0;
-
 io.sockets.on('connection', (socket) => {
+  const socketNum = socket.server.engine.clientsCount;
   socket.on('newUser', (name) => {
     socket.name = name;
-    ++numUsers;
-    socket.numUsers = numUsers;
+    socket.socketNum = socketNum;
     io.sockets.emit('update', {
       type: 'connect',
-      message: `${name}님이 입장하셨습니다.`,
+      message: `${name}님이 입장하셨습니다.`
     });
-    socket.emit('numUsers', numUsers);
-    socket.broadcast.emit('numUsers', numUsers);
+    socket.emit('socketNum', socketNum);
+    socket.broadcast.emit('socketNum', socketNum);
   });
 
   socket.on('message', (data) => {
     data.name = socket.name;
+    socket.emit('socketNum', socketNum);
     socket.broadcast.emit('update', data);
   });
 
   socket.on('disconnect', () => {
-    if (numUsers > 0) {
-      --numUsers;
-      socket.broadcast.emit('update', {
-        type: 'disconnect',
-        message: `${socket.name}님이 퇴장하셨습니다.`,
-      });
-      socket.emit('numUsers', numUsers);
-      socket.broadcast.emit('numUsers', numUsers);
-    }
+    socket.broadcast.emit('update', {
+      type: 'disconnect',
+      message: `${socket.name}님이 퇴장하셨습니다.`
+    });
+    socket.emit('socketNum', socketNum);
+    socket.broadcast.emit('socketNum', socketNum);
   });
 });

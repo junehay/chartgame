@@ -65,3 +65,14 @@ export const timeState = atom({
   key: 'timeState',
   default: 30
 });
+
+// main
+export const chatState = atom({
+  key: 'chatState',
+  default: ''
+});
+
+export const socketNumState = atom({
+  key: 'socketNumState',
+  default: 0
+});
