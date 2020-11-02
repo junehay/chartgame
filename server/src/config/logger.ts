@@ -1,5 +1,5 @@
-const winston = require('winston');
-const winstonDaily = require('winston-daily-rotate-file');
+import winston from 'winston';
+import winstonDaily from 'winston-daily-rotate-file';
 
 const logDir = 'logs';
 
@@ -19,22 +19,26 @@ const errorTransport = new winstonDaily({
   maxFiles: 30
 });
 
+interface TransformableInfo {
+  level: string;
+  message: string;
+  [key: string]: string;
+}
+
 const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss"
+      format: 'YYYY-MM-DD HH:mm:ss'
     }),
-    winston.format.printf(
-      info => `${info.timestamp} [${info.level.toUpperCase()}] - ${info.stack ? info.stack : info.message}`
-    )
+    winston.format.printf((info: TransformableInfo) => `${info.timestamp} [${info.level.toUpperCase()}] - ${info.stack ? info.stack : info.message}`)
   ),
   transports: [infoTransport, errorTransport]
 });
 
-logger.stream = {
-  write: message => {
+export const stream = {
+  write: (message: string): void => {
     logger.info(message);
   }
 };
 
-module.exports = logger;
+export default logger;

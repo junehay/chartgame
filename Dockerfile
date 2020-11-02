@@ -9,7 +9,8 @@ ENV TZ Asia/Seoul
 WORKDIR /server
 
 COPY ./client/build /client/build
-COPY ./server /server
+COPY ./server/dist /server
+COPY ./server/package*.json /server
 
 RUN npm install
 RUN npm audit fix --force

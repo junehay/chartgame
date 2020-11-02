@@ -18,13 +18,17 @@ jobs:
       - name: checkout source code
         uses: actions/checkout@master
 
-      - name: npm install
+      - name: npm install(client)
         working-directory: ./client
         run: npm install
 
       - name: react build
         working-directory: ./client
         run: CI=false npm run build
+
+      - name: node.js build
+        working-directory: ./server
+        run: npm run build
 
       - name: docker build
         run: docker build -t junehay/chartgame:0.$NOW .

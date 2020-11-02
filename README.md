@@ -26,6 +26,7 @@
 ----------------------------------
 
 ## Refactoring plan
- - Typescript
+ - Typescript(React)
+ - node.js refactor
  - Improvement performance
  - Responsive design
