@@ -10,7 +10,8 @@ WORKDIR /server
 
 COPY ./client/build /client/build
 COPY ./server/dist /server
-COPY ./server/package*.json /server
+COPY ./server/package.json /server
+COPY ./server/package-lock.json /server
 
 RUN npm install
 RUN npm audit fix --force
