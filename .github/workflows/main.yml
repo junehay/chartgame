@@ -25,6 +25,10 @@ jobs:
       - name: react build
         working-directory: ./client
         run: CI=false npm run build
+      
+      - name: npm install(server)
+        working-directory: ./server
+        run: npm install
 
       - name: node.js build
         working-directory: ./server
