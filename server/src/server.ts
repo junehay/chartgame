@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -75,13 +75,13 @@ app.get('*', (req, res, next) => {
 
 // error handler
 app.use((req, res) => {
-  res.status(404).send('404errrrrrr');
+  res.status(404).json('ERR_NOT_FOUND');
 });
 
-app.use((err: Error, req: Request, res: Response) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err);
   res.status(500).json({
-    message: err.message || 'unknown error'
+    message: err.message || 'ERR_UNKNOWN_ERROR'
   });
 });
 
